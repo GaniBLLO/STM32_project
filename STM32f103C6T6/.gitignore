@@ -1,0 +1,15 @@
+*.vs
+*.sln
+*.vcxproj
+*.user
+*.tlog
+*.vcxproj.filters
+*.exe.recipe
+*.ilk
+*.log
+*.obj
+*.idb
+*.pdb
+YA_W2/W2_Bus_Stop/W2_Bus_Stop/
+YA_W2/W2_Bus_Stop/x64/
+YA_W2/W2_Countries/W2_Countries/
