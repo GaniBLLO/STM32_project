@@ -560,23 +560,19 @@ void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
   */
 __weak void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    extern uint8_t regym, enter;
+	extern uint8_t regym;
   /* Prevent unused argument(s) compilation warning */
   UNUSED(GPIO_Pin);
   /* NOTE: This function Should not be modified, when the callback is needed,
            the HAL_GPIO_EXTI_Callback could be implemented in the user file
    */
   if(GPIO_Pin == GPIO_PIN_4){
-      if(regym == 1)
-	  regym = 2;
-      else if(regym == 2)
-	  regym = 3;
-      else if(regym == 3)
-	  regym = 1;
-  }
-  if(GPIO_Pin == GPIO_PIN_5){
-      if(enter == 0)
-	  enter = 1;
+	  if(regym == 1)
+		  regym = 2;
+	   else if(regym == 2)
+		   regym = 3;
+	   else if(regym == 3)
+		   regym = 1;
   }
 }
 

@@ -54,12 +54,12 @@ static void MX_GPIO_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-uint8_t regym = 1;
+uint8_t regym = 1, enter = 0, mode = 0;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+
 /* USER CODE END 0 */
 
 /**
@@ -69,7 +69,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	extern uint8_t regym;
+	extern uint8_t regym, enter, mode;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -94,27 +94,45 @@ int main(void)
   MX_USB_DEVICE_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-    /* USER CODE END WHILE */
-	  if(regym == 3){
+	  if(regym == 1 && enter){
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_SET);
+	      }
+	      else if(regym == 2 && enter){
 		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
-		  for(int i = 0; i < 4095; i++){
-			  TIM1->CCR1 = i;
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+		  HAL_Delay(1000);
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
+		  HAL_Delay(1000);
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+		  HAL_Delay(1000);
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_6);
+		  HAL_Delay(1000);
+	      }
+	      else if(regym == 3 && enter){
+		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
+		  for(int i = 0; i < 255; i++){
+		      TIM1->CCR1 = i;
+		      HAL_Delay(1);
 		  }
-		  for(int i = 0; i < 4095; i++){
-			  TIM1->CCR1 = 4095 - i;
+		  for(int i = 0; i < 255; i++){
+		      TIM1->CCR1 = 255 - i;
+		      HAL_Delay(1);
 		  }
-    /* USER CODE BEGIN 3 */
-	  }
-  /* USER CODE END 3 */
+
+	      }
+	      enter = 0;
   }
+  /* USER CODE END 3 */
 }
 
 /**
@@ -136,7 +154,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL6;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -151,12 +169,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
-  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -185,7 +203,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 0;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 65535;
+  htim1.Init.Period = 255;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -226,6 +244,11 @@ static void MX_TIM1_Init(void)
   /* USER CODE END TIM1_Init 2 */
   HAL_TIM_MspPostInit(&htim1);
 
+  HAL_NVIC_SetPriority(TIM1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(TIM1_IRQn);
+
+  HAL_TIM_Base_Init(&htim1);
+  HAL_TIM_Base_Start_IT(&htim1);
 }
 
 /**
@@ -276,7 +299,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
- // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
+  //HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PA4 PA5 */
   GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5;
@@ -302,33 +325,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	extern uint8_t regym;
-	uint32_t tic = HAL_GetTick();
-        if(htim->Instance == TIM1) //check if the interrupt comes from TIM1
-        {
-        	if(regym == 1 && tic > 10){
-        			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_SET);
-			  }
-			else if(regym == 2){
-			  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
-			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
-
-			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
-			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-			//  HAL_Delay(1000);
-			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
-			 // HAL_Delay(1000);
-			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
-			  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_6);
-			//  HAL_Delay(1000);
-			  }
-
-        }
-}
 /* USER CODE END 4 */
 
 /**
