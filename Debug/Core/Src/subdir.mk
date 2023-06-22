@@ -5,38 +5,35 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/Src/main.c \
-../Core/Src/stm32f1xx_hal_msp.c \
-../Core/Src/stm32f1xx_it.c \
-../Core/Src/syscalls.c \
-../Core/Src/sysmem.c \
-../Core/Src/system_stm32f1xx.c 
+../Core/src/I2C.c \
+../Core/src/RCC.c \
+../Core/src/basic_functions.c \
+../Core/src/main.c \
+../Core/src/timing_file.c 
 
 OBJS += \
-./Core/Src/main.o \
-./Core/Src/stm32f1xx_hal_msp.o \
-./Core/Src/stm32f1xx_it.o \
-./Core/Src/syscalls.o \
-./Core/Src/sysmem.o \
-./Core/Src/system_stm32f1xx.o 
+./Core/src/I2C.o \
+./Core/src/RCC.o \
+./Core/src/basic_functions.o \
+./Core/src/main.o \
+./Core/src/timing_file.o 
 
 C_DEPS += \
-./Core/Src/main.d \
-./Core/Src/stm32f1xx_hal_msp.d \
-./Core/Src/stm32f1xx_it.d \
-./Core/Src/syscalls.d \
-./Core/Src/sysmem.d \
-./Core/Src/system_stm32f1xx.d 
+./Core/src/I2C.d \
+./Core/src/RCC.d \
+./Core/src/basic_functions.d \
+./Core/src/main.d \
+./Core/src/timing_file.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
+Core/src/%.o Core/src/%.su Core/src/%.cyclo: ../Core/src/%.c Core/src/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -c -I"C:/Users/Sokolov EvgenII/Desktop/STM32/CMSIS_C8t6/CMSIS/Inc" -I"C:/Users/Sokolov EvgenII/Desktop/STM32/CMSIS_C8t6/Core/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 
-clean: clean-Core-2f-Src
+clean: clean-Core-2f-src
 
-clean-Core-2f-Src:
-	-$(RM) ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
+clean-Core-2f-src:
+	-$(RM) ./Core/src/I2C.cyclo ./Core/src/I2C.d ./Core/src/I2C.o ./Core/src/I2C.su ./Core/src/RCC.cyclo ./Core/src/RCC.d ./Core/src/RCC.o ./Core/src/RCC.su ./Core/src/basic_functions.cyclo ./Core/src/basic_functions.d ./Core/src/basic_functions.o ./Core/src/basic_functions.su ./Core/src/main.cyclo ./Core/src/main.d ./Core/src/main.o ./Core/src/main.su ./Core/src/timing_file.cyclo ./Core/src/timing_file.d ./Core/src/timing_file.o ./Core/src/timing_file.su
 
-.PHONY: clean-Core-2f-Src
+.PHONY: clean-Core-2f-src
 

@@ -9,13 +9,9 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include USB_DEVICE/Target/subdir.mk
--include USB_DEVICE/App/subdir.mk
--include Middlewares/ST/STM32_USB_Device_Library/Core/Src/subdir.mk
--include Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/subdir.mk
--include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
--include Core/Startup/subdir.mk
--include Core/Src/subdir.mk
+-include Startup/subdir.mk
+-include Core/src/subdir.mk
+-include CMSIS/src/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -38,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := New_testing
+BUILD_ARTIFACT_NAME := CMSIS_C8t6
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-New_testing.elf \
+CMSIS_C8t6.elf \
 
 MAP_FILES += \
-New_testing.map \
+CMSIS_C8t6.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-New_testing.list \
+CMSIS_C8t6.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: New_testing.elf secondary-outputs
+main-build: CMSIS_C8t6.elf secondary-outputs
 
 # Tool invocations
-New_testing.elf New_testing.map: $(OBJS) $(USER_OBJS) C:\Users\GaniBLLO\Desktop\STM32\New_testing\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "New_testing.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\GaniBLLO\Desktop\STM32\New_testing\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="New_testing.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+CMSIS_C8t6.elf CMSIS_C8t6.map: $(OBJS) $(USER_OBJS) C:\Users\Sokolov\ EvgenII\Desktop\STM32\CMSIS_C8t6\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "CMSIS_C8t6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Sokolov EvgenII\Desktop\STM32\CMSIS_C8t6\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CMSIS_C8t6.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -74,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-New_testing.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "New_testing.list"
+CMSIS_C8t6.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "CMSIS_C8t6.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) New_testing.elf New_testing.list New_testing.map default.size.stdout
+	-$(RM) CMSIS_C8t6.elf CMSIS_C8t6.list CMSIS_C8t6.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
