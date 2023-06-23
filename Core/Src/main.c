@@ -10,15 +10,18 @@
 #include "stm32f103xb.h"
 #include "timing_file.h"
 #include "RCC.h"
+#include "LCD_1602.h"
 
 /************Functions declaration**************/
 
 void RCC_init();
+void I2C_init();
+void LCD_init();
 void delay_time();
 void init_dma();
 void MCO();
 void WriteToUART();
-void I2C_init();
+
 
 
 char buffer[] = "Hello, World!\r\n";
@@ -27,7 +30,11 @@ char buffer[] = "Hello, World!\r\n";
 
 int main(){
 
+
+    System_clock();
     RCC_init();
+    I2C_init();
+    LCD_init();
 
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;	//Тактирование
     GPIOC->CRH &= ~GPIO_CRH_CNF13;	//обнуление регистра CNF
@@ -72,3 +79,9 @@ void MCO(){
 
     RCC->CFGR |= RCC_CFGR_MCO_SYSCLK;
 }
+
+void System_clock(){
+
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+}
+
