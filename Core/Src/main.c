@@ -12,16 +12,27 @@
 #include "RCC.h"
 #include "LCD_1602.h"
 
+#define Enable_RTOS	1
+
+
+#if Enable_RTOS
+    #include "FreeRTOS.h"
+    #include "task.h"
+    #include "queue.h"
+#endif
+
+
 /************Functions declaration**************/
 
 void RCC_init();
 void I2C_init();
-void LCD_init();
-void delay_time();
+//void LCD_init();
+//void delay_time();
+void vLed_Task(void *argument);
 void init_dma();
 void MCO();
 void WriteToUART();
-
+void GPIO_init();
 
 
 char buffer[] = "Hello, World!\r\n";
@@ -31,23 +42,19 @@ char buffer[] = "Hello, World!\r\n";
 int main(){
 
 
-    System_clock();
+    //Sys_clock();
     RCC_init();
     I2C_init();
-    LCD_init();
+//    LCD_init();
+//    init_dma();
+    GPIO_init();
 
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;	//Тактирование
-    GPIOC->CRH &= ~GPIO_CRH_CNF13;	//обнуление регистра CNF
-    GPIOC->CRH |= GPIO_CRH_MODE13_0;	//настройка для push-pull
+    xTaskCreate( vLed_Task, "Toggle_Led_PC13", 32, NULL, 1, NULL);
 
-
-    init_dma();
-
+    vTaskStartScheduler();
     while(1){
-	GPIOC->BSRR |= GPIO_BSRR_BS13;
-	delay_time(100000);
-	GPIOC->BSRR |= GPIO_BSRR_BR13;
-	delay_time(100000);
+
+
     }
 
 }
@@ -80,8 +87,24 @@ void MCO(){
     RCC->CFGR |= RCC_CFGR_MCO_SYSCLK;
 }
 
-void System_clock(){
+void Sys_clock(){
 
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
 }
 
+void GPIO_init(){
+
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;	//Тактирование
+    GPIOC->CRH &= ~GPIO_CRH_CNF13;	//обнуление регистра CNF
+    GPIOC->CRH |= GPIO_CRH_MODE13_0;	//настройка для push-pull
+}
+
+void vLed_Task(void *argument){
+
+    while(1){
+	GPIOC->BSRR |= GPIO_BSRR_BS13;
+	vTaskDelay(1000);
+	GPIOC->BSRR |= GPIO_BSRR_BR13;
+	vTaskDelay(1000);
+    }
+}

@@ -11,9 +11,9 @@ void LCD_Scan(uint16_t address){
 
     for(uint16_t addr = 0; addr < 127; addr++){
 
-	return address;
+//	return 1;
     }
-    return 0;
+//    return 0;
 }
 
 void LCD_init(){
