@@ -1,0 +1,4 @@
+heap_1.c:70:7:pvPortMalloc	5
+heap_1.c:122:6:vPortFree	2
+heap_1.c:134:6:vPortInitialiseBlocks	1
+heap_1.c:141:8:xPortGetFreeHeapSize	1

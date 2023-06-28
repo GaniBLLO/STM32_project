@@ -1,0 +1,3 @@
+../Core/Src/ACC_init.c:16:6:ACC_init	16	static
+../Core/Src/ACC_init.c:22:6:ACC_init_addr	32	static
+../Core/Src/ACC_init.c:45:6:ACC_setting	32	static
