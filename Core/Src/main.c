@@ -8,12 +8,11 @@
 /******************Includes*********************/
 
 #include "stm32f103xb.h"
-#include "timing_file.h"
 #include "RCC.h"
-#include "LCD_1602.h"
+//#include "SPI_Functions.h"
+//#include "LCD_1602.h"
 
-#define Enable_RTOS	1
-
+#define Enable_RTOS	0
 
 #if Enable_RTOS
     #include "FreeRTOS.h"
@@ -25,86 +24,79 @@
 /************Functions declaration**************/
 
 void RCC_init();
-void I2C_init();
+//void I2C_init();
 //void LCD_init();
 //void delay_time();
-void vLed_Task(void *argument);
-void init_dma();
-void MCO();
-void WriteToUART();
-void GPIO_init();
+//void vLed_Task(void *argument);
+//void init_dma();
 
-
-char buffer[] = "Hello, World!\r\n";
+//void WriteToUART();
+uint32_t GetTime(uint32_t timer);
+void SysTick_Handler(void);
+void Sys_clock(void);
+void GPIO_init(void);
+void ILI_9341_init();
+//void MCO(void);
+//void SPI_init(void);
 
 /*********************MAIN**********************/
 
 int main(){
-
-
-    //Sys_clock();
+	Sys_clock();
     RCC_init();
-    I2C_init();
+    ILI_9341_init();
+//    I2C_init();
 //    LCD_init();
 //    init_dma();
-    GPIO_init();
+//    GPIO_init();
+//    SPI_init();
+//    uint8_t	vector[2] = {0xFF, 0xC3};
 
-    xTaskCreate( vLed_Task, "Toggle_Led_PC13", 32, NULL, 1, NULL);
-
-    vTaskStartScheduler();
     while(1){
-
-
+//    	SPI_Transmit(SPI1, vector, 4, 100);
+//        GPIOC->BSRR |= GPIO_BSRR_BS13;
     }
 
 }
 
-void init_dma(){
+//void init_dma(){
+//
+//    RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+//
+//    DMA1_Channel7->CPAR = (uint32_t)&USART2->DR;
+//    DMA1_Channel7->CPAR = (uint32_t)buffer;
+//
+//    USART2->CR3		|= USART_CR3_DMAT;
+//}
+//
+//void WriteToUART(){
+//
+//    DMA1_Channel7->CCR &= ~DMA_CCR_EN;
+//    DMA1_Channel7->CNDTR = (sizeof(buffer)-1);
+//    DMA1->IFCR = DMA_IFCR_CGIF4;
+//    DMA1_Channel7->CCR |= DMA_CCR_EN;
+//}
 
-    RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
-    DMA1_Channel7->CPAR = (uint32_t)&USART2->DR;
-    DMA1_Channel7->CPAR = (uint32_t)buffer;
-
-    USART2->CR3		|= USART_CR3_DMAT;
-}
-
-void WriteToUART(){
-
-    DMA1_Channel7->CCR &= ~DMA_CCR_EN;
-    DMA1_Channel7->CNDTR = (sizeof(buffer)-1);
-    DMA1->IFCR = DMA_IFCR_CGIF4;
-    DMA1_Channel7->CCR |= DMA_CCR_EN;
-}
-
-
-void MCO(){
-
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;		//Включение тактирование шины APB2, где есть вывод MCO
-
-    GPIOA->CRH &= ~GPIO_CRH_CNF8_0;
-
-    RCC->CFGR |= RCC_CFGR_MCO_SYSCLK;
-}
-
-void Sys_clock(){
-
-    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-}
 
 void GPIO_init(){
 
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;	//Тактирование
-    GPIOC->CRH &= ~GPIO_CRH_CNF13;	//обнуление регистра CNF
-    GPIOC->CRH |= GPIO_CRH_MODE13_0;	//настройка для push-pull
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;				//Тактирование
+    GPIOC->CRH &= ~GPIO_CRH_CNF13;					//обнуление регистра CNF
+    GPIOC->CRH |= GPIO_CRH_MODE13_0;				//настройка для push-pull
 }
 
-void vLed_Task(void *argument){
+//void vLed_Task(void *argument){
+//
+//    while(1){
+//
+//		GPIOC->BSRR |= GPIO_BSRR_BS13;
+//		vTaskDelay(1000);
+//		GPIOC->BSRR |= GPIO_BSRR_BR13;
+//		vTaskDelay(1000);
+//    }
+//}
+//
 
-    while(1){
-	GPIOC->BSRR |= GPIO_BSRR_BS13;
-	vTaskDelay(1000);
-	GPIOC->BSRR |= GPIO_BSRR_BR13;
-	vTaskDelay(1000);
-    }
-}
+
+

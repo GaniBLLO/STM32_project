@@ -1,0 +1,4 @@
+ILI9341.c:23:6:GPIO_Init	1
+ILI9341.c:101:6:Send_Command	9
+ILI9341.c:162:6:ILI_Reset	1
+ILI9341.c:174:6:ILI_9341_init	1

@@ -1,0 +1,5 @@
+"./CMSIS/src/system_stm32f1xx.o"
+"./Core/src/RCC.o"
+"./Core/src/main.o"
+"./Core/src/timing_file.o"
+"./Startup/startup_stm32f103xb.o"

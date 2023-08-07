@@ -9,5 +9,4 @@
 #define CORE_INC_MAIN_H_
 
 
-
 #endif /* CORE_INC_MAIN_H_ */

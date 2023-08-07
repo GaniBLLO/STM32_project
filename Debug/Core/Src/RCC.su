@@ -1,1 +1,3 @@
 ../Core/src/RCC.c:9:6:RCC_init	4	static
+../Core/src/RCC.c:36:6:MCO	4	static
+../Core/src/RCC.c:45:6:Sys_clock	4	static

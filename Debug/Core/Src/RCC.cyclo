@@ -1,1 +1,3 @@
 RCC.c:9:6:RCC_init	4
+RCC.c:36:6:MCO	1
+RCC.c:45:6:Sys_clock	1

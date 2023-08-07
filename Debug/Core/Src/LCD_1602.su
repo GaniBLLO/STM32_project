@@ -1,0 +1,2 @@
+../Core/src/LCD_1602.c:10:6:LCD_Scan	24	static
+../Core/src/LCD_1602.c:19:6:LCD_init	16	static

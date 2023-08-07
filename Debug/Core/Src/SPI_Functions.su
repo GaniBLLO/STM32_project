@@ -1,0 +1,2 @@
+../Core/src/SPI_Functions.c:15:6:SPI_init	4	static
+../Core/src/SPI_Functions.c:66:12:SPI_Transmit	32	static

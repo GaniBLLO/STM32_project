@@ -24,5 +24,6 @@ C_DEPS :=
 SUBDIRS := \
 CMSIS/src \
 Core/src \
+FreeRTOS/src \
 Startup \
 
