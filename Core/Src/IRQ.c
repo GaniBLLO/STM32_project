@@ -7,10 +7,13 @@
 #include <IRQ.h>
 GLOBAL_TIME	TIME = GLOBAL_TIME_DEFAULT;
 
+#define SET		GPIOC->BSRR |= GPIO_BSRR_BR13;
+#define RESET	GPIOC->BSRR |= GPIO_BSRR_BS13;
+
 void delay_time(uint32_t time){
 
-    for (uint32_t i = 0; i < time; i++);
-    	//__NOP;
+    for (uint32_t i = 0; i < time; i++)
+    	__asm__("nop");
 }
 
 uint32_t GetTime(uint32_t timer){

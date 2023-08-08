@@ -15,8 +15,12 @@
 #define WR_ON	GPIOB->BSRR |= GPIO_BSRR_BR10;
 #define WR_OFF	GPIOB->BSRR |= GPIO_BSRR_BS10;
 
+#define RD_ON	GPIOA->BSRR |= GPIO_BSRR_BR11;
+#define RD_OFF	GPIOA->BSRR |= GPIO_BSRR_BS11;
+
 #define RST_ON	GPIOA->BSRR |= GPIO_BSRR_BR10;
 #define RST_OFF	GPIOA->BSRR |= GPIO_BSRR_BS10;
+
 
 D_ARR	D	=	D_DEFAULT;
 
@@ -25,6 +29,8 @@ void GPIO_Init(){
 	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
 	RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
 
+	GPIOA->BSRR = 0x0;
+	GPIOB->BSRR = 0x0;
 	//GPIO
 	/* D[0:7] => 0
 	 * D0	->	PB0
@@ -38,35 +44,35 @@ void GPIO_Init(){
 	//D0
 	GPIOB->CRL |= GPIO_CRL_MODE0;
 	GPIOB->CRL &= ~GPIO_CRL_CNF0;
-	GPIOB->BSRR |= GPIO_BSRR_BR0;
+	GPIOB->BSRR |= GPIO_BSRR_BS0;
 	//D1
 	GPIOB->CRL |= GPIO_CRL_MODE1;
 	GPIOB->CRL &= ~GPIO_CRL_CNF1;
-	GPIOB->BSRR |= GPIO_BSRR_BR1;
+	GPIOB->BSRR |= GPIO_BSRR_BS1;
 	//D2
 	GPIOA->CRL |= GPIO_CRL_MODE2;
 	GPIOA->CRL &= ~GPIO_CRL_CNF2;
-	GPIOA->BSRR |= GPIO_BSRR_BR2;
+	GPIOA->BSRR |= GPIO_BSRR_BS2;
 	//D3
 	GPIOA->CRL |= GPIO_CRL_MODE3;
 	GPIOA->CRL &= ~GPIO_CRL_CNF3;
-	GPIOA->BSRR |= GPIO_BSRR_BR3;
+	GPIOA->BSRR |= GPIO_BSRR_BS3;
 	//D4
 	GPIOA->CRL |= GPIO_CRL_MODE4;
 	GPIOA->CRL &= ~GPIO_CRL_CNF4;
-	GPIOA->BSRR |= GPIO_BSRR_BR4;
+	GPIOA->BSRR |= GPIO_BSRR_BS4;
 	//D5
 	GPIOA->CRL |= GPIO_CRL_MODE5;
 	GPIOA->CRL &= ~GPIO_CRL_CNF5;
-	GPIOA->BSRR |= GPIO_BSRR_BR5;
+	GPIOA->BSRR |= GPIO_BSRR_BS5;
 	//D6
 	GPIOA->CRL |= GPIO_CRL_MODE6;
 	GPIOA->CRL &= ~GPIO_CRL_CNF6;
-	GPIOA->BSRR |= GPIO_BSRR_BR6;
+	GPIOA->BSRR |= GPIO_BSRR_BS6;
 	//D7
 	GPIOA->CRL |= GPIO_CRL_MODE7;
 	GPIOA->CRL &= ~GPIO_CRL_CNF7;
-	GPIOA->BSRR |= GPIO_BSRR_BR7;
+	GPIOA->BSRR |= GPIO_BSRR_BS7;
 
 	/* WR/RD => 1
 	 * WRx	->	PB10
@@ -74,11 +80,11 @@ void GPIO_Init(){
 	//WRx
 	GPIOB->CRH |= GPIO_CRH_MODE10;
 	GPIOB->CRH &= ~GPIO_CRH_CNF10;
-	GPIOB->BSRR |= GPIO_BSRR_BS10;
+	GPIOB->BSRR |= GPIO_BSRR_BR10;
 	//RDx
 	GPIOB->CRH |= GPIO_CRH_MODE11;
 	GPIOB->CRH &= ~GPIO_CRH_CNF11;
-	GPIOB->BSRR |= GPIO_BSRR_BS11;
+	GPIOB->BSRR |= GPIO_BSRR_BR11;
 
 	/* RSx/CS =>
 	 * RSx	->	PA8
@@ -87,95 +93,98 @@ void GPIO_Init(){
 	//RSx
 	GPIOA->CRH |= GPIO_CRH_MODE8;
 	GPIOA->CRH &= ~GPIO_CRH_CNF8;
-	GPIOA->BSRR |= GPIO_BSRR_BS8;
+	GPIOA->BSRR |= GPIO_BSRR_BR8;
 	//CS
 	GPIOA->CRH |= GPIO_CRH_MODE9;
 	GPIOA->CRH &= ~GPIO_CRH_CNF9;
-	GPIOA->BSRR |= GPIO_BSRR_BS9;
+	GPIOA->BSRR |= GPIO_BSRR_BR9;
 	//RST
 	GPIOA->CRH |= GPIO_CRH_MODE10;
 	GPIOA->CRH &= ~GPIO_CRH_CNF10;
-	GPIOA->BSRR |= GPIO_BSRR_BS10;
+	GPIOA->BSRR |= GPIO_BSRR_BR10;
 }
 
 void Send_Command(uint8_t command){
 	D.all = command;
 
-	if(D.bit.D_7){
-		GPIOA->BSRR |= GPIO_BSRR_BS7;
-		GPIOA->BSRR |= GPIO_BSRR_BR7;
-	}
-	else
-		GPIOA->BSRR |= GPIO_BSRR_BR7;
-
-	if(D.bit.D_6){
-		GPIOA->BSRR |= GPIO_BSRR_BS6;
-		GPIOA->BSRR |= GPIO_BSRR_BR6;
-	}
-	else
-		GPIOA->BSRR |= GPIO_BSRR_BR6;
-
-	if(D.bit.D_5){
-		GPIOA->BSRR |= GPIO_BSRR_BS5;
-		GPIOA->BSRR |= GPIO_BSRR_BR5;
-	}
-	else
-		GPIOA->BSRR |= GPIO_BSRR_BR5;
-
-	if(D.bit.D_4){
-		GPIOA->BSRR |= GPIO_BSRR_BS4;
-		GPIOA->BSRR |= GPIO_BSRR_BR4;
-	}
-	else
-		GPIOA->BSRR |= GPIO_BSRR_BR4;
-
-	if(D.bit.D_3){
-		GPIOA->BSRR |= GPIO_BSRR_BS3;
-		GPIOA->BSRR |= GPIO_BSRR_BR3;
-	}
-	else
-		GPIOA->BSRR |= GPIO_BSRR_BR3;
-
-
-	if(D.bit.D_2){
-		GPIOA->BSRR |= GPIO_BSRR_BS2;
-		GPIOA->BSRR |= GPIO_BSRR_BR2;
-	}
-	else
-		GPIOA->BSRR |= GPIO_BSRR_BR2;
-
-	if(D.bit.D_1){
-		GPIOB->BSRR |= GPIO_BSRR_BS1;
-		GPIOB->BSRR |= GPIO_BSRR_BR1;
-	}
-	else
-		GPIOB->BSRR |= GPIO_BSRR_BR1;
-
-	if(D.bit.D_0){
-		GPIOB->BSRR |= GPIO_BSRR_BS0;
-		GPIOB->BSRR |= GPIO_BSRR_BR0;
-	}
-	else
-		GPIOB->BSRR |= GPIO_BSRR_BR0;
-
-}
-void ILI_Reset(uint32_t cmd){
-	CS_ON;
 	RSx_ON;
 	WR_ON;
-	RST_ON;
-	delay_time(125);
-	//Send_Command(cmd);
+	delay_time(2);
+
+	if(D.bit.D_0)
+		GPIOB->BSRR = GPIO_BSRR_BS0;
+	else
+		GPIOB->BSRR = GPIO_BSRR_BR0;
+
+	if(D.bit.D_1)
+		GPIOB->BSRR = GPIO_BSRR_BS1;
+	else
+		GPIOB->BSRR = GPIO_BSRR_BR1;
+
+	if(D.bit.D_2)
+		GPIOA->BSRR = GPIO_BSRR_BS2;
+	else
+		GPIOA->BSRR = GPIO_BSRR_BR2;
+
+	if(D.bit.D_3)
+		GPIOA->BSRR = GPIO_BSRR_BS3;
+	else
+		GPIOA->BSRR = GPIO_BSRR_BR3;
+
+	if(D.bit.D_4)
+		GPIOA->BSRR = GPIO_BSRR_BS4;
+	else
+		GPIOA->BSRR = GPIO_BSRR_BR4;
+
+	if(D.bit.D_5)
+		GPIOA->BSRR = GPIO_BSRR_BS5;
+	else
+		GPIOA->BSRR = GPIO_BSRR_BR5;
+
+	if(D.bit.D_6)
+		GPIOA->BSRR = GPIO_BSRR_BS6;
+	else
+		GPIOA->BSRR = GPIO_BSRR_BR6;
+
+	if(D.bit.D_7)
+		GPIOA->BSRR = GPIO_BSRR_BS7;
+	else
+		GPIOA->BSRR = GPIO_BSRR_BR7;
+
 	WR_OFF;
+	delay_time(2);
 	RSx_OFF;
-	CS_OFF;
+}
+
+
+void ILI_Reset(){
+
+	RST_ON;
+	delay_time(20);
+	RST_OFF;
+	delay_time(120);
 }
 
 void ILI_9341_init(){
 	GPIO_Init();
 
-	ILI_Reset(0x10);
+	CS_OFF;
+	RST_OFF;
+	RSx_OFF;
+	RD_OFF;
+
+	ILI_Reset();
+
+	CS_ON;
+
+	Send_Command(0x1);		//Software reset
+	delay_time(1000);
+
+	Send_Command(0x10);		//Sleep mode
+	Send_Command(0x28);		//Display off
+	CS_OFF;
 }
+
 
 
 

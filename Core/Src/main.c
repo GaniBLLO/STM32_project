@@ -23,6 +23,11 @@
 
 /************Functions declaration**************/
 
+uint32_t GetTime(uint32_t timer);
+void SysTick_Handler(void);
+void Sys_clock(void);
+void GPIO_init(void);
+void ILI_9341_init();
 void RCC_init();
 //void I2C_init();
 //void LCD_init();
@@ -31,11 +36,6 @@ void RCC_init();
 //void init_dma();
 
 //void WriteToUART();
-uint32_t GetTime(uint32_t timer);
-void SysTick_Handler(void);
-void Sys_clock(void);
-void GPIO_init(void);
-void ILI_9341_init();
 //void MCO(void);
 //void SPI_init(void);
 
@@ -43,12 +43,13 @@ void ILI_9341_init();
 
 int main(){
 	Sys_clock();
+//    GPIO_init();
     RCC_init();
     ILI_9341_init();
 //    I2C_init();
 //    LCD_init();
 //    init_dma();
-//    GPIO_init();
+
 //    SPI_init();
 //    uint8_t	vector[2] = {0xFF, 0xC3};
 

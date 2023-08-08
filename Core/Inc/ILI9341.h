@@ -27,7 +27,7 @@ typedef	union{
 
 #define D_DEFAULT  {0x0}
 
-void ILI_Reset(uint32_t cmd);
+void ILI_Reset(void);
 void ILI_9341_init();
 void GPIO_Init();
 #endif /* ILI9341_H_ */
