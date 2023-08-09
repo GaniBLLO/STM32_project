@@ -6,6 +6,8 @@
  */
 #include "stm32f103xb.h"
 
+#define SYSCLOCK	360000000U		//Частота процессора
+
 void RCC_init(){
 
 	/*Задаётся тактирование HCLK = 36MHz*/
@@ -44,13 +46,16 @@ void MCO(){
 
 void Sys_clock(){
 
+    SysTick->LOAD &= ~SysTick_LOAD_RELOAD_Msk;
+    SysTick->VAL &= ~SysTick_VAL_CURRENT_Msk;
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;		//Выкл. выключенного счётчика
+
     SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;		//Вкл. отсчёта до нуля
     SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk;	//Источник синхронизации без делителя 24MHz
 
-    SysTick->LOAD = 35999;							//Задаю значение с которого будет отсчёт счётчика
+    SysTick->LOAD = 35999;				//Задаю значение с которого будет отсчёт счётчика
 
-    SysTick->VAL = 35999;							//Задаю текущее значение счётчика
+    SysTick->VAL = 35999;				//Задаю текущее значение счётчика
 
     SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;		//Вкл. счётчик
 }

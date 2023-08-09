@@ -23,7 +23,7 @@
 
 /************Functions declaration**************/
 
-uint32_t GetTime(uint32_t timer);
+uint32_t GetTime(void);
 void SysTick_Handler(void);
 void Sys_clock(void);
 void GPIO_init(void);
@@ -42,7 +42,7 @@ void RCC_init();
 /*********************MAIN**********************/
 
 int main(){
-	Sys_clock();
+    Sys_clock();
 //    GPIO_init();
     RCC_init();
     ILI_9341_init();
