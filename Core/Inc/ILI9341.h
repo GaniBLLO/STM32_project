@@ -25,9 +25,16 @@ typedef	union{
 	}bit;
 }D_ARR;
 
+typedef enum{
+    OK	= 0x0,
+    BUSY	= 0x1,
+    ERR		= 0x2,
+    TIMEOUT	= 0x3
+}INIT_STATUS;
+
 #define D_DEFAULT  {0x0}
 
 void ILI_Reset(void);
-void ILI_9341_init();
+INIT_STATUS ILI_9341_init();
 void GPIO_Init();
 #endif /* ILI9341_H_ */
