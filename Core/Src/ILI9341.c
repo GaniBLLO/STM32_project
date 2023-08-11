@@ -35,6 +35,7 @@ void GPIO_Init(){
 	//GPIO
 	/* D[0:7] => 0
 	 * D0	->	PA5
+	 * D0	->	PA5
 	 * D1	->	PA6
 	 * D2	->	PA7
 	 * D3	->	PA8
@@ -168,7 +169,7 @@ void ILI_Reset(){
 	delay_time(1000);
 }
 
-void ILI_9341_init(){
+INIT_STATUS ILI_9341_init(){
 	GPIO_Init();
 
 	RST_OFF;
@@ -184,6 +185,8 @@ void ILI_9341_init(){
 
 	Send_Command(0x10);		//Sleep mode
 	Send_Command(0x28);		//Display off
+
+	return OK;
 
 }
 

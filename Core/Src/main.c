@@ -9,6 +9,7 @@
 
 #include "stm32f103xb.h"
 #include "RCC.h"
+#include "ILI9341.h"
 //#include "SPI_Functions.h"
 //#include "LCD_1602.h"
 
@@ -27,8 +28,9 @@ uint32_t GetTime(void);
 void SysTick_Handler(void);
 void Sys_clock(void);
 void GPIO_init(void);
-void ILI_9341_init();
+INIT_STATUS ILI_9341_init();
 void RCC_init();
+void ADC_Init();
 //void I2C_init();
 //void LCD_init();
 //void delay_time();
@@ -45,8 +47,12 @@ int main(){
     Sys_clock();
 //    GPIO_init();
     RCC_init();
-    ILI_9341_init();
 //    I2C_init();
+
+    if(ILI_9341_init() != OK){
+	//TODO ERR!
+    }
+    ADC_Init();
 //    LCD_init();
 //    init_dma();
 
@@ -83,7 +89,7 @@ int main(){
 void GPIO_init(){
 
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;				//Тактирование
-    GPIOC->CRH &= ~GPIO_CRH_CNF13;					//обнуление регистра CNF
+    GPIOC->CRH &= ~GPIO_CRH_CNF13;				//обнуление регистра CNF
     GPIOC->CRH |= GPIO_CRH_MODE13_0;				//настройка для push-pull
 }
 
@@ -100,4 +106,41 @@ void GPIO_init(){
 //
 
 
+void ADC_Init(){
+    //RCC
+//    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;	т.к тактирование этого пина уже настроен в экрана
+    RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 
+    //GPIO
+    /* PA0 -> ADC12_IN0
+     * PA1 -> ADC12_IN1 */
+    //PA0
+    GPIOA->CRL &= ~GPIO_CRL_MODE0;
+    GPIOA->CRL &= ~GPIO_CRL_CNF0;
+    GPIOA->BSRR = GPIO_BSRR_BR0;
+    //PA1
+    GPIOA->CRL &= ~GPIO_CRL_MODE1;
+    GPIOA->CRL &= ~GPIO_CRL_CNF1;
+    GPIOA->BSRR = GPIO_BSRR_BR1;
+
+    ADC1->CR1 = 0x0;				//todo Проверить, действительно ли регистры очистились
+    ADC1->CR1 |= ADC_CR1_SCAN;			//Вкл. режима сканирования
+    ADC1->CR1 |= (0x6 << ADC_CR1_DUALMOD_Pos);	//todo Узнать на что влияет
+
+    ADC1->CR2 |= ADC_CR2_ADON;			//Вкл. АЦП
+    ADC1->CR2 |= ADC_CR2_CONT;			//Режим непрерывного преобразования
+    ADC1->CR2 |= ADC_CR2_CAL;			//Включить калибровку. Рек. перед включение ацп
+    while(ADC1->CR2 & ADC_CR2_CAL);
+    delay_time(2);
+
+    ADC1->CR2 &= ~ADC_CR2_ALIGN;		//Выравнивнивание данных по правому краю regular
+    ADC1->CR2 |= ADC_CR2_EXTSEL;		//Вкл. преобразование программно
+    ADC1->CR2 &= ~ADC_CR2_EXTTRIG;		//Отключение преобраз. по внешнему переключению.
+
+    ADC1->SMPR2 |= ADC_SMPR2_SMP0;		//Сэмплирование(обработка сигнала) 239.5 канала 0 PA0
+    ADC1->SMPR2 |= ADC_SMPR2_SMP1;		//Сэмплирование(обработка сигнала) 239.5 канала 1 PA1
+
+    ADC1->SQR1 |= (0x1 << ADC_SQR1_L_Pos);	//Задаю кол-во преобразований
+    ADC1->SQR3 |= ADC_SQR3_SQ1;			//Выполняет преобразование в 1 канале
+    ADC1->SQR3 |= ADC_SQR3_SQ2;			//Выполняет преобразование в 2 канале
+}
