@@ -10,6 +10,7 @@
 #include "stm32f103xb.h"
 #include "RCC.h"
 #include "ILI9341.h"
+#include "IRQ.h"
 //#include "SPI_Functions.h"
 //#include "LCD_1602.h"
 
@@ -60,6 +61,9 @@ int main(){
 //    uint8_t	vector[2] = {0xFF, 0xC3};
 
     while(1){
+    	if(ADC1->SR & ADC_SR_EOC){
+    		ADC1->DR;
+    	}
 //    	SPI_Transmit(SPI1, vector, 4, 100);
 //        GPIOC->BSRR |= GPIO_BSRR_BS13;
     }

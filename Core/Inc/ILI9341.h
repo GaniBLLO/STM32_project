@@ -35,6 +35,8 @@ typedef enum{
 #define D_DEFAULT  {0x0}
 
 void ILI_Reset(void);
+void read_disp_id(uint8_t command);
+void Send_Command(uint8_t data, uint8_t command);
 INIT_STATUS ILI_9341_init();
 void GPIO_Init();
 #endif /* ILI9341_H_ */
