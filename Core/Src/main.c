@@ -46,8 +46,8 @@ void ADC_Init();
 
 int main(){
     Sys_clock();
-//    GPIO_init();
     RCC_init();
+//    GPIO_init();
 //    I2C_init();
 
     if(ILI_9341_init() != OK){

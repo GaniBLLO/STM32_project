@@ -6,38 +6,37 @@
  */
 #include "stm32f103xb.h"
 
-#define SYSCLOCK	360000000U		//Частота процессора
-
 void RCC_init(){
 
-	/*Задаётся тактирование HCLK = 36MHz*/
-    RCC->CR |= ((uint32_t) RCC_CR_HSEON);	//Включение кварца
+	/*Задаётся тактирование HCLK = 72MHz*/
+    RCC->CR |= RCC_CR_HSEON;				//Включение кварца 8MHz
     while (!(RCC->CR & RCC_CR_HSERDY));		//Жду включение кварца.тактирования
 
-    RCC->CFGR |= RCC_CFGR_HPRE_DIV1;		//Задаю тактирование общей шины AHB 48 - 72MHz...
-    RCC->CFGR |= RCC_CFGR_PPRE1_DIV1;		//Тактирование шины APB1..
-    RCC->CFGR |= RCC_CFGR_PPRE2_DIV2;		//Тактирование шины APB2.
+    //Сюда можно задать тактирование для памяти flash
 
-    RCC->CFGR &= ~RCC_CFGR_PLLMULL;		//Множители и делители приравниваю к 0
-    RCC->CFGR &= ~RCC_CFGR_PLLSRC;		//Делитель для тактирования (после PLL Source mux)
+
+    RCC->CFGR |= RCC_CFGR_HPRE_DIV1;		//Задал делитель для шины AHB ->/1 => 72/1 = 72MHZ MAX!!
+    RCC->CFGR |= RCC_CFGR_PPRE1_DIV2;		//Задал делитель для шины APB1 ->/2 => 72/2 = 36MHZ MAX!!
+    RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;		//Задал делитель для шины APB2 ->/1 => 72/1 = 72MHZ MAX!!
+
+    RCC->CFGR &= ~RCC_CFGR_PLLSRC;			//Делитель для тактирования (после PLL Source mux)
     RCC->CFGR &= ~RCC_CFGR_PLLXTPRE;		//Делитель для тактирования HSE (После "HSE") => 1
+    RCC->CFGR &= ~RCC_CFGR_PLLMULL;			//Множители и делители приравниваю к 0
 
-    RCC->CFGR |= RCC_CFGR_PLLSRC;		//PLL Source MUX
-    RCC->CFGR |= RCC_CFGR_PLLXTPRE;		//Делитель для тактирования HSE/2
-    RCC->CFGR |= RCC_CFGR_PLLMULL9;		//Множитель PLL = 9
+    RCC->CFGR |= RCC_CFGR_PLLSRC;			//делитель перед PLL Source MUX HSE генератора
+    //RCC->CFGR |= RCC_CFGR_PLLXTPRE;		//Делитель для тактирования HSE/2 перед PLL S_MUX ToDO Проверить т.к он уже отключён
+    RCC->CFGR |= RCC_CFGR_PLLMULL9;			//Множитель PLL = 9
 
     //ADC
-    RCC->CFGR &= ~RCC_CFGR_HPRE; 		//Делитель AHB = /1	=> HCLK = 36MHz
-    RCC->CFGR &= ~RCC_CFGR_PPRE2;		//Задаю делитель для шины APB2 = /1
-    RCC->CFGR &= ~RCC_CFGR_ADCPRE;		//Обнулить значение делителя для АЦП /2
-    RCC->CFGR |= RCC_CFGR_ADCPRE_0;		//Задаю делитель для ацп = |0|1| = /4 => 36/9MHz = 9MHz < 18MHz(MAX)
+    RCC->CFGR &= ~RCC_CFGR_ADCPRE;			//Обнулить значение делителя для АЦП /2
+    RCC->CFGR |= RCC_CFGR_ADCPRE_DIV6;		//Задаю делитель для ацп = |1|0| = /6 => 72/6MHz = 12MHz < 18MHz(MAX)
 
-    RCC->CR |= RCC_CR_PLLON;			//Включение Множителя PLL
+    RCC->CR |= RCC_CR_PLLON;				//Включение Множителя PLL
     while((RCC->CR & RCC_CR_PLLRDY) == 0);
 
-    RCC->CFGR &= ~RCC_CFGR_SW;			//System clock mux
-    RCC->CFGR |= RCC_CFGR_SW_1;
-    while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_1);	//Жду пока включится
+    RCC->CFGR &= ~RCC_CFGR_SW;				//System clock mux
+    RCC->CFGR |= RCC_CFGR_SW_PLL;			//RCC_CFGR_SW_1;
+    while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);	//Жду пока включится
 }
 
 
@@ -57,9 +56,9 @@ void Sys_clock(){
     SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;		//Вкл. отсчёта до нуля
     SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk;	//Источник синхронизации без делителя 24MHz
 
-    SysTick->LOAD = 35999;				//Задаю значение с которого будет отсчёт счётчика
+    SysTick->LOAD = 71999;//35999;				//Задаю значение с которого будет отсчёт счётчика
 
-    SysTick->VAL = 35999;				//Задаю текущее значение счётчика
+    SysTick->VAL = 71999;//35999;				//Задаю текущее значение счётчика
 
     SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;		//Вкл. счётчик
 }
