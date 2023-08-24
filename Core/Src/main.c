@@ -45,15 +45,15 @@ void ADC_Init();
 /*********************MAIN**********************/
 
 int main(){
-    Sys_clock();
     RCC_init();
-//    GPIO_init();
+    Sys_clock();
+    GPIO_init();
 //    I2C_init();
 
-    if(ILI_9341_init() != OK){
+//    if(ILI_9341_init() != OK){
 	//TODO ERR!
-    }
-    ADC_Init();
+//    }
+//    ADC_Init();
 //    LCD_init();
 //    init_dma();
 
@@ -61,9 +61,13 @@ int main(){
 //    uint8_t	vector[2] = {0xFF, 0xC3};
 
     while(1){
-    	if(ADC1->SR & ADC_SR_EOC){
-    		ADC1->DR;
-    	}
+//    	if(ADC1->SR & ADC_SR_EOC){
+//    		ADC1->DR;
+//    	}
+	GPIOC->BSRR |= GPIO_BSRR_BR13;
+	delay_time(50);
+	GPIOC->BSRR |= GPIO_BSRR_BS13;
+	delay_time(250);
 //    	SPI_Transmit(SPI1, vector, 4, 100);
 //        GPIOC->BSRR |= GPIO_BSRR_BS13;
     }

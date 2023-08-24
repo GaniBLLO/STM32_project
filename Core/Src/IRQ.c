@@ -17,9 +17,7 @@ void delay_time(uint32_t time){
 
     if(w_8 < MAX_TIME)
 	w_8 += (uint32_t)(0x1);
-    while((GetTick() - tick_start) < w_8 ){
-	;
-    }
+    while((GetTick() - tick_start) < w_8 );
 }
 
 uint32_t GetTick(void){
@@ -27,6 +25,7 @@ uint32_t GetTick(void){
 }
 
 void SysTick_Handler(){
+
 
     TICK++;
     TIME.ms++;
@@ -45,4 +44,6 @@ void SysTick_Handler(){
 	    TIME.min = 0;
 	    TIME.hr++;
     }
+
+
 }
