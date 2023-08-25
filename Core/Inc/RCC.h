@@ -12,6 +12,7 @@
 void RCC_init(void);
 void MCO(void);
 void Sys_clock(void);
+void TIMx_init(void);
 
 
 #endif /* INC_RCC_H_ */

@@ -25,13 +25,14 @@
 
 /************Functions declaration**************/
 
-uint32_t GetTime(void);
-void SysTick_Handler(void);
-void Sys_clock(void);
-void GPIO_init(void);
-INIT_STATUS ILI_9341_init();
-void RCC_init();
+//void SysTick_Handler(void);
+//void RCC_init();
+////void Sys_clock(void);
 void ADC_Init();
+void GPIO_init(void);
+//void TIMx_init(void);
+//uint32_t GetTime(void);
+//INIT_STATUS ILI_9341_init();
 //void I2C_init();
 //void LCD_init();
 //void delay_time();
@@ -48,12 +49,13 @@ int main(){
     RCC_init();
     Sys_clock();
     GPIO_init();
+    ADC_Init();
+    TIMx_init();
 //    I2C_init();
 
 //    if(ILI_9341_init() != OK){
 	//TODO ERR!
 //    }
-//    ADC_Init();
 //    LCD_init();
 //    init_dma();
 
@@ -96,7 +98,10 @@ int main(){
 
 void GPIO_init(){
 
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;				//Тактирование
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;				//Тактирование GPIOA
+    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;				//Тактирование GPIOB
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;				//Тактирование GPIOAC
+
     GPIOC->CRH &= ~GPIO_CRH_CNF13;				//обнуление регистра CNF
     GPIOC->CRH |= GPIO_CRH_MODE13_0;				//настройка для push-pull
 }
@@ -116,7 +121,7 @@ void GPIO_init(){
 
 void ADC_Init(){
     //RCC
-//    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;	т.к тактирование этого пина уже настроен в экрана
+    //RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;		//т.к тактирование этого пина уже настроен в экрана
     RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 
     //GPIO

@@ -25,9 +25,12 @@ uint32_t GetTick(void){
 }
 
 void SysTick_Handler(){
-
-
     TICK++;
+}
+
+void TIM3_IRQHandler(void){
+    if(TIM3->SR & TIM_SR_UIF)
+	TIM3->SR &= ~TIM_SR_UIF;
     TIME.ms++;
     if(TIME.ms == 1000){
 	    TIME.ms = 0;
@@ -44,6 +47,4 @@ void SysTick_Handler(){
 	    TIME.min = 0;
 	    TIME.hr++;
     }
-
-
 }

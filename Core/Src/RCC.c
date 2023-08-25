@@ -11,7 +11,7 @@
 
 void RCC_init(){
 
-	/*Задаётся тактирование HCLK = 72MHz*/
+    /*Задаётся тактирование HCLK = 72MHz*/
 
     RCC->CR |= RCC_CR_HSEON;			//Включение кварца HSE 8MHz
     while (!(RCC->CR & RCC_CR_HSERDY));		//Жду включение кварца.тактирования
@@ -46,8 +46,8 @@ void RCC_init(){
     RCC->CR |= RCC_CR_PLLON;			//Включение Множителя PLL
     while((RCC->CR & RCC_CR_PLLRDY) == 0);
 
-    RCC->CFGR &= ~RCC_CFGR_SW;			//System clock mux
-    RCC->CFGR |= RCC_CFGR_SW_PLL;			//RCC_CFGR_SW_1;
+    RCC->CFGR &= ~RCC_CFGR_SW;					//System clock mux
+    RCC->CFGR |= RCC_CFGR_SW_PLL;				//RCC_CFGR_SW_1;
     while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);	//Жду пока включится
 }
 
@@ -68,9 +68,41 @@ void Sys_clock(){
     SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;		//Вкл. отсчёта до нуля
     SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk;	//Источник синхронизации без делителя 24MHz
 
-    SysTick->LOAD = TimerTick;//35999;				//Задаю значение с которого будет отсчёт счётчика
+    SysTick->LOAD = TimerTick;				//Задаю значение с которого будет отсчёт счётчика
 
-    SysTick->VAL = TimerTick;//35999;				//Задаю текущее значение счётчика
+    SysTick->VAL = TimerTick;				//Задаю текущее значение счётчика
 
     SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;		//Вкл. счётчик
+}
+
+void TIMx_init(void){
+
+    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;	//Вкл. тактирования таймера
+    /*TIM2 APB1 (MAX 36MHz)
+     *GPIO
+     *PB0 -> TIM3_CH3 Input capture cahnnel <-> Input floating
+     *PB1 -> TIM3_CH4 Output compare channel <-> Alternative function push pull*/
+    //PB0
+    GPIOB->CRL |= GPIO_CRL_CNF0_0;	//|0|1| - Input floating
+    GPIOB->CRL &= ~GPIO_CRL_MODE0;	//|0|0| - Input mode
+    //PB1
+    GPIOB->CRL |= GPIO_CRL_CNF1_1;	//|1|0| - Alternative function push pull
+    GPIOB->CRL |= GPIO_CRL_MODE1_0;	//|0|1| - Mode MAX 10MHz toDo поменять на 50 МГц
+
+    //TIM2
+    TIM3->CR1 &= ~TIM_CR1_OPM;		//Счётчик NE остановится когда произойдёт событие
+    TIM3->CR1 &= ~TIM_CR1_DIR;		//Счётчик считает вверх
+    TIM3->CR1 &= ~TIM_CR1_CMS;		//Выравнивание работает как задан DIR.
+    TIM3->CR1 |= TIM_CR1_ARPE;		//Автоперегрузка таймера
+    TIM3->CR1 &= ~TIM_CR1_CKD;		//Множитель для счётчика х1
+
+    TIM3->DIER |= TIM_DIER_UIE;		//Вкл. DMA
+
+    TIM3->PSC = 1;//719-1;
+    TIM3->ARR = 35999;//50000-1;
+
+    NVIC_EnableIRQ(TIM3_IRQn);
+    TIM3->CR1 |= TIM_CR1_CEN;		//Включения счётчика
+
+
 }
