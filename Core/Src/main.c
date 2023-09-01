@@ -66,10 +66,18 @@ int main(){
 //    	if(ADC1->SR & ADC_SR_EOC){
 //    		ADC1->DR;
 //    	}
-	GPIOC->BSRR |= GPIO_BSRR_BR13;
-	delay_time(50);
-	GPIOC->BSRR |= GPIO_BSRR_BS13;
-	delay_time(250);
+//	GPIOC->BSRR |= GPIO_BSRR_BR13;
+//	delay_time(50);
+//	GPIOC->BSRR |= GPIO_BSRR_BS13;
+//	delay_time(250);
+	for(int i = 0; i < TIM3->ARR; ++i){
+	    TIM3->CCR4 = i;
+	    delay_time(1);
+	}
+	for(int i = TIM3->ARR; i > 0; --i){
+	    TIM3->CCR4 = i;
+	    delay_time(1);
+	}
 //    	SPI_Transmit(SPI1, vector, 4, 100);
 //        GPIOC->BSRR |= GPIO_BSRR_BS13;
     }

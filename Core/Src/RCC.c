@@ -5,6 +5,7 @@
  *      Author: Sokolov EvgenII
  */
 #include "stm32f103xb.h"
+#include "stm32f1xx.h"
 
 #define F_CPU 		72000000UL	// Тактовая у нас 72МГЦ
 #define TimerTick  	F_CPU/1000-1	// Нам нужен килогерц
@@ -80,29 +81,35 @@ void TIMx_init(void){
     RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;	//Вкл. тактирования таймера
     /*TIM2 APB1 (MAX 36MHz)
      *GPIO
-     *PB0 -> TIM3_CH3 Input capture cahnnel <-> Input floating
      *PB1 -> TIM3_CH4 Output compare channel <-> Alternative function push pull*/
-    //PB0
-    GPIOB->CRL |= GPIO_CRL_CNF0_0;	//|0|1| - Input floating
-    GPIOB->CRL &= ~GPIO_CRL_MODE0;	//|0|0| - Input mode
     //PB1
+    GPIOB->CRL &= ~GPIO_CRL_CNF1;	//Обязательная очистка регистра
     GPIOB->CRL |= GPIO_CRL_CNF1_1;	//|1|0| - Alternative function push pull
-    GPIOB->CRL |= GPIO_CRL_MODE1_0;	//|0|1| - Mode MAX 10MHz toDo поменять на 50 МГц
+    GPIOB->CRL |= GPIO_CRL_MODE1;	//|1|1| - Mode MAX 10MHz toDo поменять на 50 МГц
 
-    //TIM2
+    //TIM3
     TIM3->CR1 &= ~TIM_CR1_OPM;		//Счётчик NE остановится когда произойдёт событие
     TIM3->CR1 &= ~TIM_CR1_DIR;		//Счётчик считает вверх
     TIM3->CR1 &= ~TIM_CR1_CMS;		//Выравнивание работает как задан DIR.
     TIM3->CR1 |= TIM_CR1_ARPE;		//Автоперегрузка таймера
     TIM3->CR1 &= ~TIM_CR1_CKD;		//Множитель для счётчика х1
 
-    TIM3->DIER |= TIM_DIER_UIE;		//Вкл. DMA
+    TIM3->DIER |= TIM_DIER_UIE;		//Вкл. IRQ
 
-    TIM3->PSC = 1;//719-1;
-    TIM3->ARR = 35999;//50000-1;
+    TIM3->PSC = 2;//1;//719-1;
+    TIM3->ARR = 999;//35999;//999;//50000-1;//;
 
     NVIC_EnableIRQ(TIM3_IRQn);
     TIM3->CR1 |= TIM_CR1_CEN;		//Включения счётчика
 
+    //PWM Output for PB1 - > PWM
+    TIM3->CCMR2 &= ~TIM_CCMR2_CC4S;	//Включаю для 4ого канала вывод ШИМ. Режим захвата и сравнения
+    TIM3->CCMR2 &= ~TIM_CCMR2_OC4FE;	//Включаю для 4ого канала вывод ШИМ. Режим захвата и сравнения
+    TIM3->CCMR2 |= TIM_CCMR2_OC4PE;	//Режим переодичности ШИМа
+    TIM3->CCMR2 |= 6UL << TIM_CCMR2_OC4M_Pos;//(TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1);	//Режим 110
+    TIM3->CCMR2 &= ~TIM_CCMR2_OC4CE;	//
 
+    //PWM ON
+    TIM3->CCER |= TIM_CCER_CC4E;
+    TIM3->CCER |= TIM_CCER_CC4P;
 }
