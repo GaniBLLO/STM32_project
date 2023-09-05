@@ -6,19 +6,22 @@
  */
 
 #include "stdint.h"
+#include "LCD_1602.h"
+#define LCD_ADDRESS	0x37
 
-void LCD_Scan(uint16_t address){
+void LCD_Scan(uint8_t address){
 
-    for(uint16_t addr = 0; addr < 127; addr++){
+    for(uint8_t addr = 0; addr < 255; ++addr){
 
-//	return 1;
     }
 //    return 0;
 }
 
-void LCD_init(){
-    uint16_t addr = 0x0;
-    LCD_Scan(addr);
+ErrorStatus LCD_1602_init(void){
+
+    LCD_Scan(LCD_ADDRESS);
+
+    return SUCCESS;
 }
 
 
