@@ -12,15 +12,15 @@ void I2C_init(){
 /*включение тактирования портов для интерфейса*/
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;		//Включил тактирование на шине с интрейсом
 
- /* Настройка пина Alternative func.open drain
-  * SCL -> I2C clock => PB6
-  * SDA -> I2C Data I/O => PB7*/
-    GPIOB->CRL |= GPIO_CRL_CNF6;	//Open-drain
+ /* Настройка пина
+  * SCL -> I2C clock 	=> PB6	Alternative func.open drain
+  * SDA -> I2C Data I/O => PB7	Alternative func.open drain*/
     GPIOB->CRL &= ~GPIO_CRL_CNF6;	//Обнулил регистр
+    GPIOB->CRL |= GPIO_CRL_CNF6;	//Open-drain
     GPIOB->CRL |= GPIO_CRL_MODE6;	//Alternative func Макс 50МГц т.к частота шины 24MHz
 
-    GPIOB->CRL |= GPIO_CRL_CNF7;
     GPIOB->CRL &= ~GPIO_CRL_CNF7;
+    GPIOB->CRL |= GPIO_CRL_CNF7;
     GPIOB->CRL |= GPIO_CRL_MODE7;
 
     /*Настройка I2C по умолчанию все регистры равны нулю ToDo проверить так ли это? на примере OAR1/2?*/
@@ -35,6 +35,8 @@ void I2C_init(){
     delay_time(10);
     I2C1->CR1 &= ~I2C_CR1_SWRST;	//Действия аналогично HAL
     delay_time(10);
+
+    I2C1->CR1 &= ~I2C_CR1_SMBUS;	//Режим I2C
 
     I2C1->CR2 = 0x24; 			//HEX(24) = 36MHz шины APB1
     I2C1->TRISE = 0x25;			//Время нарастания фронта сигнала

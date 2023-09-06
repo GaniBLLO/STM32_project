@@ -51,9 +51,13 @@ void TIM3_IRQHandler(void){
 
 void DMA1_Channel1_IRQHandler(void){
 
-	if(DMA1->ISR & DMA_ISR_TCIF1){			//Если прерывание после удачной передачи данных
-		DMA1->IFCR = DMA_IFCR_CHTIF1;		//Снимаю флаг успешной передачи
-	}else if(DMA1->ISR & DMA_ISR_TEIF1){	//Если прерывание после неудачной передачи данных
-		DMA1->IFCR = DMA_IFCR_CTEIF1;		//Снятие флага об ошибке передачи todo выполнить обработку ошибки
-	}
+    extern uint16_t buff[4];
+    if(DMA1->ISR & DMA_ISR_TCIF1){		//Если прерывание после удачной передачи данных
+	DMA1->IFCR = DMA_IFCR_CGIF1;		//Снимаю флаг успешной передачи
+	TIM3->CCR4 = (uint32_t)buff[0];
+	GPIOC->BSRR |= GPIO_BSRR_BS13;
+    }
+    if(DMA1->ISR & DMA_ISR_TEIF1){		//Если прерывание после неудачной передачи данных
+	DMA1->IFCR = DMA_IFCR_CTEIF1;		//Снятие флага об ошибке передачи todo выполнить обработку ошибки
+    }
 }

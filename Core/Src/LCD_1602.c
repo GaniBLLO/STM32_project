@@ -9,12 +9,12 @@
 #include "LCD_1602.h"
 #define LCD_ADDRESS	0x37
 
-void LCD_Scan(uint8_t address){
+ErrorStatus LCD_Scan(uint8_t address){
 
     for(uint8_t addr = 0; addr < 255; ++addr){
 
     }
-//    return 0;
+    return SUCCESS;
 }
 
 ErrorStatus LCD_1602_init(void){

@@ -83,7 +83,7 @@ void TIMx_init(void){
      *GPIO
      *PB1 -> TIM3_CH4 Output compare channel <-> Alternative function push pull*/
     //PB1
-    GPIOB->CRL &= ~GPIO_CRL_CNF1;	//Обязательная очистка регистра
+    GPIOB->CRL &= ~GPIO_CRL_CNF1;	//Обязательная очистка регистра!!!
     GPIOB->CRL |= GPIO_CRL_CNF1_1;	//|1|0| - Alternative function push pull
     GPIOB->CRL |= GPIO_CRL_MODE1;	//|1|1| - Mode MAX 10MHz toDo поменять на 50 МГц
 
@@ -94,10 +94,11 @@ void TIMx_init(void){
     TIM3->CR1 |= TIM_CR1_ARPE;		//Автоперегрузка таймера
     TIM3->CR1 &= ~TIM_CR1_CKD;		//Множитель для счётчика х1
 
-    TIM3->DIER |= TIM_DIER_UIE;		//Вкл. IRQ
+    //TIM3->DIER |= TIM_DIER_UIE;		//Вкл. IRQ было
+    TIM3->DIER |= TIM_DIER_CC4DE;		//Вкл. IRQ стало
 
-    TIM3->PSC = 2;//1;//719-1;
-    TIM3->ARR = 999;//35999;//999;//50000-1;//;
+    TIM3->PSC = 1;//2;//719-1;
+    TIM3->ARR = 35999;//999;//999;//50000-1;//;
 
     NVIC_EnableIRQ(TIM3_IRQn);
     TIM3->CR1 |= TIM_CR1_CEN;		//Включения счётчика
@@ -111,5 +112,5 @@ void TIMx_init(void){
 
     //PWM ON
     TIM3->CCER |= TIM_CCER_CC4E;
-    TIM3->CCER |= TIM_CCER_CC4P;
+    //TIM3->CCER |= TIM_CCER_CC4P;
 }
