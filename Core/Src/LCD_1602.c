@@ -7,7 +7,7 @@
 
 #include "stdint.h"
 #include "LCD_1602.h"
-#define LCD_ADDR	0x37
+#define LCD_ADDR	0x38
 #define PIN_RS    (1 << 0)
 #define PIN_EN    (1 << 2)
 #define BACKLIGHT (1 << 3)
