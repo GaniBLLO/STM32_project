@@ -1,1 +1,2 @@
-../Core/src/I2C.c:10:6:I2C_init	4	static
+../Core/Src/I2C.c:11:6:I2C_init	8	static
+../Core/Src/I2C.c:50:9:I2C_send	24	static

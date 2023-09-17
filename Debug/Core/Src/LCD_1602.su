@@ -1,2 +1,7 @@
-../Core/src/LCD_1602.c:10:6:LCD_Scan	24	static
-../Core/src/LCD_1602.c:19:6:LCD_init	16	static
+../Core/Src/LCD_1602.c:15:13:LCD_SendInternal	24	static
+../Core/Src/LCD_1602.c:28:6:LCD_SendCommand	16	static
+../Core/Src/LCD_1602.c:32:6:LCD_SendData	16	static
+../Core/Src/LCD_1602.c:36:6:LCD_SendString	16	static
+../Core/Src/LCD_1602.c:43:13:I2C_Scan	40	static
+../Core/Src/LCD_1602.c:51:6:LCD_Init	16	static
+../Core/Src/LCD_1602.c:62:13:LCD_1602_init	8	static

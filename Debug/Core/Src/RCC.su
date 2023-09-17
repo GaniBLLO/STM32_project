@@ -1,3 +1,5 @@
-../Core/src/RCC.c:9:6:RCC_init	4	static
-../Core/src/RCC.c:36:6:MCO	4	static
-../Core/src/RCC.c:45:6:Sys_clock	4	static
+C:/Users/GaniBLLO/Desktop/GIT_CMSIS/STM32_project/CMSIS/Inc/core_cm3.h:1511:22:__NVIC_EnableIRQ	16	static
+../Core/Src/RCC.c:13:6:RCC_init	4	static
+../Core/Src/RCC.c:56:6:MCO	4	static
+../Core/Src/RCC.c:63:6:Sys_clock	4	static
+../Core/Src/RCC.c:79:6:TIMx_init	8	static

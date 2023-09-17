@@ -1,1 +1,1 @@
-Core/src/basic_functions.o: ../Core/src/basic_functions.c
+Core/Src/basic_functions.o: ../Core/Src/basic_functions.c

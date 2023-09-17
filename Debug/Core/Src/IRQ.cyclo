@@ -1,3 +1,0 @@
-IRQ.c:10:6:delay_time	2
-IRQ.c:16:10:GetTime	1
-IRQ.c:20:6:SysTick_Handler	4

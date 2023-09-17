@@ -1,4 +1,5 @@
-../Core/src/ILI9341.c:23:6:GPIO_Init	4	static
-../Core/src/ILI9341.c:101:6:Send_Command	16	static
-../Core/src/ILI9341.c:162:6:ILI_Reset	16	static
-../Core/src/ILI9341.c:174:6:ILI_9341_init	8	static
+../Core/Src/ILI9341.c:28:6:GPIO_Init	4	static
+../Core/Src/ILI9341.c:107:6:read_disp_id	24	static
+../Core/Src/ILI9341.c:121:6:Send_Command	16	static
+../Core/Src/ILI9341.c:169:6:ILI_Reset	8	static
+../Core/Src/ILI9341.c:177:13:ILI_9341_init	8	static

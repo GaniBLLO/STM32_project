@@ -10,8 +10,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Startup/subdir.mk
--include FreeRTOS/src/subdir.mk
--include Core/src/subdir.mk
+-include Core/Src/subdir.mk
 -include CMSIS/src/subdir.mk
 -include objects.mk
 
@@ -61,8 +60,8 @@ all: main-build
 main-build: CMSIS_C8t6.elf secondary-outputs
 
 # Tool invocations
-CMSIS_C8t6.elf CMSIS_C8t6.map: $(OBJS) $(USER_OBJS) C:\Users\AnastasII\Desktop\STM\CMSIS_C8t6\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "CMSIS_C8t6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\AnastasII\Desktop\STM\CMSIS_C8t6\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CMSIS_C8t6.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+CMSIS_C8t6.elf CMSIS_C8t6.map: $(OBJS) $(USER_OBJS) C:\Users\GaniBLLO\Desktop\GIT_CMSIS\STM32_project\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "CMSIS_C8t6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\GaniBLLO\Desktop\GIT_CMSIS\STM32_project\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="CMSIS_C8t6.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

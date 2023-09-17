@@ -5,45 +5,45 @@ Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
   0 .isr_vector   0000010c  08000000  08000000  00010000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  1 .text         00000544  0800010c  0800010c  0001010c  2**2
+  1 .text         000009b0  0800010c  0800010c  0001010c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000000  08000650  08000658  00010658  2**0
-                  CONTENTS, ALLOC, LOAD, DATA
-  3 .ARM.extab    00000000  08000650  08000650  00010658  2**0
+  2 .rodata       00000038  08000abc  08000abc  00010abc  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08000af4  08000af4  00010afc  2**0
                   CONTENTS
-  4 .ARM          00000000  08000650  08000650  00010658  2**0
+  4 .ARM          00000000  08000af4  08000af4  00010afc  2**0
                   CONTENTS
-  5 .preinit_array 00000000  08000650  08000658  00010658  2**0
+  5 .preinit_array 00000000  08000af4  08000afc  00010afc  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08000650  08000650  00010650  2**2
+  6 .init_array   00000004  08000af4  08000af4  00010af4  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08000654  08000654  00010654  2**2
+  7 .fini_array   00000004  08000af8  08000af8  00010af8  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000000  20000000  20000000  00010658  2**0
+  8 .data         00000000  20000000  20000000  00010afc  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          0000002c  20000000  08000658  00020000  2**2
+  9 .bss          0000003c  20000000  08000afc  00020000  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  2000002c  08000658  0002002c  2**0
+ 10 ._user_heap_stack 00000604  2000003c  08000afc  0002003c  2**0
                   ALLOC
- 11 .ARM.attributes 00000029  00000000  00000000  00010658  2**0
+ 11 .ARM.attributes 00000029  00000000  00000000  00010afc  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00000ae0  00000000  00000000  00010681  2**0
+ 12 .debug_info   00001921  00000000  00000000  00010b25  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00000553  00000000  00000000  00011161  2**0
+ 13 .debug_abbrev 00000895  00000000  00000000  00012446  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000110  00000000  00000000  000116b8  2**3
+ 14 .debug_aranges 00000188  00000000  00000000  00012ce0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 000000b8  00000000  00000000  000117c8  2**3
+ 15 .debug_ranges 00000120  00000000  00000000  00012e68  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001020f  00000000  00000000  00011880  2**0
+ 16 .debug_macro  00010304  00000000  00000000  00012f88  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   000018e5  00000000  00000000  00021a8f  2**0
+ 17 .debug_line   000020a6  00000000  00000000  0002328c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00054270  00000000  00000000  00023374  2**0
+ 18 .debug_str    000546c6  00000000  00000000  00025332  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  000775e4  2**0
+ 19 .comment      00000050  00000000  00000000  000799f8  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00000258  00000000  00000000  00077634  2**2
+ 20 .debug_frame  000003fc  00000000  00000000  00079a48  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -62,7 +62,7 @@ Disassembly of section .text:
  8000122:	bd10      	pop	{r4, pc}
  8000124:	20000000 	.word	0x20000000
  8000128:	00000000 	.word	0x00000000
- 800012c:	08000638 	.word	0x08000638
+ 800012c:	08000aa4 	.word	0x08000aa4
 
 08000130 <frame_dummy>:
  8000130:	b508      	push	{r3, lr}
@@ -74,7 +74,7 @@ Disassembly of section .text:
  800013e:	bd08      	pop	{r3, pc}
  8000140:	00000000 	.word	0x00000000
  8000144:	20000004 	.word	0x20000004
- 8000148:	08000638 	.word	0x08000638
+ 8000148:	08000aa4 	.word	0x08000aa4
 
 0800014c <SystemInit>:
   * @note   This function should be used only after reset.
@@ -96,819 +96,1503 @@ void SystemInit (void)
  8000154:	bc80      	pop	{r7}
  8000156:	4770      	bx	lr
 
-08000158 <GPIO_Init>:
-#define RST_ON	GPIOA->BSRR |= GPIO_BSRR_BR10;
-#define RST_OFF	GPIOA->BSRR |= GPIO_BSRR_BS10;
-
-D_ARR	D	=	D_DEFAULT;
-
-void GPIO_Init(){
- 8000158:	b480      	push	{r7}
- 800015a:	af00      	add	r7, sp, #0
-	//RCC
-	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
- 800015c:	4b7c      	ldr	r3, [pc, #496]	; (8000350 <GPIO_Init+0x1f8>)
- 800015e:	699b      	ldr	r3, [r3, #24]
- 8000160:	4a7b      	ldr	r2, [pc, #492]	; (8000350 <GPIO_Init+0x1f8>)
- 8000162:	f043 0304 	orr.w	r3, r3, #4
- 8000166:	6193      	str	r3, [r2, #24]
-	RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
- 8000168:	4b79      	ldr	r3, [pc, #484]	; (8000350 <GPIO_Init+0x1f8>)
- 800016a:	699b      	ldr	r3, [r3, #24]
- 800016c:	4a78      	ldr	r2, [pc, #480]	; (8000350 <GPIO_Init+0x1f8>)
- 800016e:	f043 0308 	orr.w	r3, r3, #8
- 8000172:	6193      	str	r3, [r2, #24]
-	 * D4	->	PA4
-	 * D5	->	PA5
-	 * D6	->	PA6
-	 * D7	->	PA7	*/
-	//D0
-	GPIOB->CRL |= GPIO_CRL_MODE0;
- 8000174:	4b77      	ldr	r3, [pc, #476]	; (8000354 <GPIO_Init+0x1fc>)
- 8000176:	681b      	ldr	r3, [r3, #0]
- 8000178:	4a76      	ldr	r2, [pc, #472]	; (8000354 <GPIO_Init+0x1fc>)
- 800017a:	f043 0303 	orr.w	r3, r3, #3
- 800017e:	6013      	str	r3, [r2, #0]
-	GPIOB->CRL &= ~GPIO_CRL_CNF0;
- 8000180:	4b74      	ldr	r3, [pc, #464]	; (8000354 <GPIO_Init+0x1fc>)
- 8000182:	681b      	ldr	r3, [r3, #0]
- 8000184:	4a73      	ldr	r2, [pc, #460]	; (8000354 <GPIO_Init+0x1fc>)
- 8000186:	f023 030c 	bic.w	r3, r3, #12
- 800018a:	6013      	str	r3, [r2, #0]
-	GPIOB->BSRR |= GPIO_BSRR_BR0;
- 800018c:	4b71      	ldr	r3, [pc, #452]	; (8000354 <GPIO_Init+0x1fc>)
- 800018e:	691b      	ldr	r3, [r3, #16]
- 8000190:	4a70      	ldr	r2, [pc, #448]	; (8000354 <GPIO_Init+0x1fc>)
- 8000192:	f443 3380 	orr.w	r3, r3, #65536	; 0x10000
- 8000196:	6113      	str	r3, [r2, #16]
-	//D1
-	GPIOB->CRL |= GPIO_CRL_MODE1;
- 8000198:	4b6e      	ldr	r3, [pc, #440]	; (8000354 <GPIO_Init+0x1fc>)
- 800019a:	681b      	ldr	r3, [r3, #0]
- 800019c:	4a6d      	ldr	r2, [pc, #436]	; (8000354 <GPIO_Init+0x1fc>)
- 800019e:	f043 0330 	orr.w	r3, r3, #48	; 0x30
- 80001a2:	6013      	str	r3, [r2, #0]
-	GPIOB->CRL &= ~GPIO_CRL_CNF1;
- 80001a4:	4b6b      	ldr	r3, [pc, #428]	; (8000354 <GPIO_Init+0x1fc>)
- 80001a6:	681b      	ldr	r3, [r3, #0]
- 80001a8:	4a6a      	ldr	r2, [pc, #424]	; (8000354 <GPIO_Init+0x1fc>)
- 80001aa:	f023 03c0 	bic.w	r3, r3, #192	; 0xc0
- 80001ae:	6013      	str	r3, [r2, #0]
-	GPIOB->BSRR |= GPIO_BSRR_BR1;
- 80001b0:	4b68      	ldr	r3, [pc, #416]	; (8000354 <GPIO_Init+0x1fc>)
- 80001b2:	691b      	ldr	r3, [r3, #16]
- 80001b4:	4a67      	ldr	r2, [pc, #412]	; (8000354 <GPIO_Init+0x1fc>)
- 80001b6:	f443 3300 	orr.w	r3, r3, #131072	; 0x20000
- 80001ba:	6113      	str	r3, [r2, #16]
-	//D2
-	GPIOA->CRL |= GPIO_CRL_MODE2;
- 80001bc:	4b66      	ldr	r3, [pc, #408]	; (8000358 <GPIO_Init+0x200>)
- 80001be:	681b      	ldr	r3, [r3, #0]
- 80001c0:	4a65      	ldr	r2, [pc, #404]	; (8000358 <GPIO_Init+0x200>)
- 80001c2:	f443 7340 	orr.w	r3, r3, #768	; 0x300
- 80001c6:	6013      	str	r3, [r2, #0]
-	GPIOA->CRL &= ~GPIO_CRL_CNF2;
- 80001c8:	4b63      	ldr	r3, [pc, #396]	; (8000358 <GPIO_Init+0x200>)
- 80001ca:	681b      	ldr	r3, [r3, #0]
- 80001cc:	4a62      	ldr	r2, [pc, #392]	; (8000358 <GPIO_Init+0x200>)
- 80001ce:	f423 6340 	bic.w	r3, r3, #3072	; 0xc00
- 80001d2:	6013      	str	r3, [r2, #0]
-	GPIOA->BSRR |= GPIO_BSRR_BR2;
- 80001d4:	4b60      	ldr	r3, [pc, #384]	; (8000358 <GPIO_Init+0x200>)
- 80001d6:	691b      	ldr	r3, [r3, #16]
- 80001d8:	4a5f      	ldr	r2, [pc, #380]	; (8000358 <GPIO_Init+0x200>)
- 80001da:	f443 2380 	orr.w	r3, r3, #262144	; 0x40000
- 80001de:	6113      	str	r3, [r2, #16]
-	//D3
-	GPIOA->CRL |= GPIO_CRL_MODE3;
- 80001e0:	4b5d      	ldr	r3, [pc, #372]	; (8000358 <GPIO_Init+0x200>)
- 80001e2:	681b      	ldr	r3, [r3, #0]
- 80001e4:	4a5c      	ldr	r2, [pc, #368]	; (8000358 <GPIO_Init+0x200>)
- 80001e6:	f443 5340 	orr.w	r3, r3, #12288	; 0x3000
- 80001ea:	6013      	str	r3, [r2, #0]
-	GPIOA->CRL &= ~GPIO_CRL_CNF3;
- 80001ec:	4b5a      	ldr	r3, [pc, #360]	; (8000358 <GPIO_Init+0x200>)
- 80001ee:	681b      	ldr	r3, [r3, #0]
- 80001f0:	4a59      	ldr	r2, [pc, #356]	; (8000358 <GPIO_Init+0x200>)
- 80001f2:	f423 4340 	bic.w	r3, r3, #49152	; 0xc000
- 80001f6:	6013      	str	r3, [r2, #0]
-	GPIOA->BSRR |= GPIO_BSRR_BR3;
- 80001f8:	4b57      	ldr	r3, [pc, #348]	; (8000358 <GPIO_Init+0x200>)
- 80001fa:	691b      	ldr	r3, [r3, #16]
- 80001fc:	4a56      	ldr	r2, [pc, #344]	; (8000358 <GPIO_Init+0x200>)
- 80001fe:	f443 2300 	orr.w	r3, r3, #524288	; 0x80000
- 8000202:	6113      	str	r3, [r2, #16]
-	//D4
-	GPIOA->CRL |= GPIO_CRL_MODE4;
- 8000204:	4b54      	ldr	r3, [pc, #336]	; (8000358 <GPIO_Init+0x200>)
- 8000206:	681b      	ldr	r3, [r3, #0]
- 8000208:	4a53      	ldr	r2, [pc, #332]	; (8000358 <GPIO_Init+0x200>)
- 800020a:	f443 3340 	orr.w	r3, r3, #196608	; 0x30000
- 800020e:	6013      	str	r3, [r2, #0]
-	GPIOA->CRL &= ~GPIO_CRL_CNF4;
- 8000210:	4b51      	ldr	r3, [pc, #324]	; (8000358 <GPIO_Init+0x200>)
- 8000212:	681b      	ldr	r3, [r3, #0]
- 8000214:	4a50      	ldr	r2, [pc, #320]	; (8000358 <GPIO_Init+0x200>)
- 8000216:	f423 2340 	bic.w	r3, r3, #786432	; 0xc0000
- 800021a:	6013      	str	r3, [r2, #0]
-	GPIOA->BSRR |= GPIO_BSRR_BR4;
- 800021c:	4b4e      	ldr	r3, [pc, #312]	; (8000358 <GPIO_Init+0x200>)
- 800021e:	691b      	ldr	r3, [r3, #16]
- 8000220:	4a4d      	ldr	r2, [pc, #308]	; (8000358 <GPIO_Init+0x200>)
- 8000222:	f443 1380 	orr.w	r3, r3, #1048576	; 0x100000
- 8000226:	6113      	str	r3, [r2, #16]
-	//D5
-	GPIOA->CRL |= GPIO_CRL_MODE5;
- 8000228:	4b4b      	ldr	r3, [pc, #300]	; (8000358 <GPIO_Init+0x200>)
- 800022a:	681b      	ldr	r3, [r3, #0]
- 800022c:	4a4a      	ldr	r2, [pc, #296]	; (8000358 <GPIO_Init+0x200>)
- 800022e:	f443 1340 	orr.w	r3, r3, #3145728	; 0x300000
- 8000232:	6013      	str	r3, [r2, #0]
-	GPIOA->CRL &= ~GPIO_CRL_CNF5;
- 8000234:	4b48      	ldr	r3, [pc, #288]	; (8000358 <GPIO_Init+0x200>)
- 8000236:	681b      	ldr	r3, [r3, #0]
- 8000238:	4a47      	ldr	r2, [pc, #284]	; (8000358 <GPIO_Init+0x200>)
- 800023a:	f423 0340 	bic.w	r3, r3, #12582912	; 0xc00000
- 800023e:	6013      	str	r3, [r2, #0]
-	GPIOA->BSRR |= GPIO_BSRR_BR5;
- 8000240:	4b45      	ldr	r3, [pc, #276]	; (8000358 <GPIO_Init+0x200>)
- 8000242:	691b      	ldr	r3, [r3, #16]
- 8000244:	4a44      	ldr	r2, [pc, #272]	; (8000358 <GPIO_Init+0x200>)
- 8000246:	f443 1300 	orr.w	r3, r3, #2097152	; 0x200000
- 800024a:	6113      	str	r3, [r2, #16]
-	//D6
-	GPIOA->CRL |= GPIO_CRL_MODE6;
- 800024c:	4b42      	ldr	r3, [pc, #264]	; (8000358 <GPIO_Init+0x200>)
- 800024e:	681b      	ldr	r3, [r3, #0]
- 8000250:	4a41      	ldr	r2, [pc, #260]	; (8000358 <GPIO_Init+0x200>)
- 8000252:	f043 7340 	orr.w	r3, r3, #50331648	; 0x3000000
- 8000256:	6013      	str	r3, [r2, #0]
-	GPIOA->CRL &= ~GPIO_CRL_CNF6;
- 8000258:	4b3f      	ldr	r3, [pc, #252]	; (8000358 <GPIO_Init+0x200>)
- 800025a:	681b      	ldr	r3, [r3, #0]
- 800025c:	4a3e      	ldr	r2, [pc, #248]	; (8000358 <GPIO_Init+0x200>)
- 800025e:	f023 6340 	bic.w	r3, r3, #201326592	; 0xc000000
- 8000262:	6013      	str	r3, [r2, #0]
-	GPIOA->BSRR |= GPIO_BSRR_BR6;
- 8000264:	4b3c      	ldr	r3, [pc, #240]	; (8000358 <GPIO_Init+0x200>)
- 8000266:	691b      	ldr	r3, [r3, #16]
- 8000268:	4a3b      	ldr	r2, [pc, #236]	; (8000358 <GPIO_Init+0x200>)
- 800026a:	f443 0380 	orr.w	r3, r3, #4194304	; 0x400000
- 800026e:	6113      	str	r3, [r2, #16]
-	//D7
-	GPIOA->CRL |= GPIO_CRL_MODE7;
- 8000270:	4b39      	ldr	r3, [pc, #228]	; (8000358 <GPIO_Init+0x200>)
- 8000272:	681b      	ldr	r3, [r3, #0]
- 8000274:	4a38      	ldr	r2, [pc, #224]	; (8000358 <GPIO_Init+0x200>)
- 8000276:	f043 5340 	orr.w	r3, r3, #805306368	; 0x30000000
- 800027a:	6013      	str	r3, [r2, #0]
-	GPIOA->CRL &= ~GPIO_CRL_CNF7;
- 800027c:	4b36      	ldr	r3, [pc, #216]	; (8000358 <GPIO_Init+0x200>)
- 800027e:	681b      	ldr	r3, [r3, #0]
- 8000280:	4a35      	ldr	r2, [pc, #212]	; (8000358 <GPIO_Init+0x200>)
- 8000282:	f023 4340 	bic.w	r3, r3, #3221225472	; 0xc0000000
- 8000286:	6013      	str	r3, [r2, #0]
-	GPIOA->BSRR |= GPIO_BSRR_BR7;
- 8000288:	4b33      	ldr	r3, [pc, #204]	; (8000358 <GPIO_Init+0x200>)
- 800028a:	691b      	ldr	r3, [r3, #16]
- 800028c:	4a32      	ldr	r2, [pc, #200]	; (8000358 <GPIO_Init+0x200>)
- 800028e:	f443 0300 	orr.w	r3, r3, #8388608	; 0x800000
- 8000292:	6113      	str	r3, [r2, #16]
-
-	/* WR/RD => 1
-	 * WRx	->	PB10
-	 * RDx	->	PB11 */
-	//WRx
-	GPIOB->CRH |= GPIO_CRH_MODE10;
- 8000294:	4b2f      	ldr	r3, [pc, #188]	; (8000354 <GPIO_Init+0x1fc>)
- 8000296:	685b      	ldr	r3, [r3, #4]
- 8000298:	4a2e      	ldr	r2, [pc, #184]	; (8000354 <GPIO_Init+0x1fc>)
- 800029a:	f443 7340 	orr.w	r3, r3, #768	; 0x300
- 800029e:	6053      	str	r3, [r2, #4]
-	GPIOB->CRH &= ~GPIO_CRH_CNF10;
- 80002a0:	4b2c      	ldr	r3, [pc, #176]	; (8000354 <GPIO_Init+0x1fc>)
- 80002a2:	685b      	ldr	r3, [r3, #4]
- 80002a4:	4a2b      	ldr	r2, [pc, #172]	; (8000354 <GPIO_Init+0x1fc>)
- 80002a6:	f423 6340 	bic.w	r3, r3, #3072	; 0xc00
- 80002aa:	6053      	str	r3, [r2, #4]
-	GPIOB->BSRR |= GPIO_BSRR_BS10;
- 80002ac:	4b29      	ldr	r3, [pc, #164]	; (8000354 <GPIO_Init+0x1fc>)
- 80002ae:	691b      	ldr	r3, [r3, #16]
- 80002b0:	4a28      	ldr	r2, [pc, #160]	; (8000354 <GPIO_Init+0x1fc>)
- 80002b2:	f443 6380 	orr.w	r3, r3, #1024	; 0x400
- 80002b6:	6113      	str	r3, [r2, #16]
-	//RDx
-	GPIOB->CRH |= GPIO_CRH_MODE11;
- 80002b8:	4b26      	ldr	r3, [pc, #152]	; (8000354 <GPIO_Init+0x1fc>)
- 80002ba:	685b      	ldr	r3, [r3, #4]
- 80002bc:	4a25      	ldr	r2, [pc, #148]	; (8000354 <GPIO_Init+0x1fc>)
- 80002be:	f443 5340 	orr.w	r3, r3, #12288	; 0x3000
- 80002c2:	6053      	str	r3, [r2, #4]
-	GPIOB->CRH &= ~GPIO_CRH_CNF11;
- 80002c4:	4b23      	ldr	r3, [pc, #140]	; (8000354 <GPIO_Init+0x1fc>)
- 80002c6:	685b      	ldr	r3, [r3, #4]
- 80002c8:	4a22      	ldr	r2, [pc, #136]	; (8000354 <GPIO_Init+0x1fc>)
- 80002ca:	f423 4340 	bic.w	r3, r3, #49152	; 0xc000
- 80002ce:	6053      	str	r3, [r2, #4]
-	GPIOB->BSRR |= GPIO_BSRR_BS11;
- 80002d0:	4b20      	ldr	r3, [pc, #128]	; (8000354 <GPIO_Init+0x1fc>)
- 80002d2:	691b      	ldr	r3, [r3, #16]
- 80002d4:	4a1f      	ldr	r2, [pc, #124]	; (8000354 <GPIO_Init+0x1fc>)
- 80002d6:	f443 6300 	orr.w	r3, r3, #2048	; 0x800
- 80002da:	6113      	str	r3, [r2, #16]
-	/* RSx/CS =>
-	 * RSx	->	PA8
-	 * CS	->	PA9
-	 * RST	->	PA10*/
-	//RSx
-	GPIOA->CRH |= GPIO_CRH_MODE8;
- 80002dc:	4b1e      	ldr	r3, [pc, #120]	; (8000358 <GPIO_Init+0x200>)
- 80002de:	685b      	ldr	r3, [r3, #4]
- 80002e0:	4a1d      	ldr	r2, [pc, #116]	; (8000358 <GPIO_Init+0x200>)
- 80002e2:	f043 0303 	orr.w	r3, r3, #3
- 80002e6:	6053      	str	r3, [r2, #4]
-	GPIOA->CRH &= ~GPIO_CRH_CNF8;
- 80002e8:	4b1b      	ldr	r3, [pc, #108]	; (8000358 <GPIO_Init+0x200>)
- 80002ea:	685b      	ldr	r3, [r3, #4]
- 80002ec:	4a1a      	ldr	r2, [pc, #104]	; (8000358 <GPIO_Init+0x200>)
- 80002ee:	f023 030c 	bic.w	r3, r3, #12
- 80002f2:	6053      	str	r3, [r2, #4]
-	GPIOA->BSRR |= GPIO_BSRR_BS8;
- 80002f4:	4b18      	ldr	r3, [pc, #96]	; (8000358 <GPIO_Init+0x200>)
- 80002f6:	691b      	ldr	r3, [r3, #16]
- 80002f8:	4a17      	ldr	r2, [pc, #92]	; (8000358 <GPIO_Init+0x200>)
- 80002fa:	f443 7380 	orr.w	r3, r3, #256	; 0x100
- 80002fe:	6113      	str	r3, [r2, #16]
-	//CS
-	GPIOA->CRH |= GPIO_CRH_MODE9;
- 8000300:	4b15      	ldr	r3, [pc, #84]	; (8000358 <GPIO_Init+0x200>)
- 8000302:	685b      	ldr	r3, [r3, #4]
- 8000304:	4a14      	ldr	r2, [pc, #80]	; (8000358 <GPIO_Init+0x200>)
- 8000306:	f043 0330 	orr.w	r3, r3, #48	; 0x30
- 800030a:	6053      	str	r3, [r2, #4]
-	GPIOA->CRH &= ~GPIO_CRH_CNF9;
- 800030c:	4b12      	ldr	r3, [pc, #72]	; (8000358 <GPIO_Init+0x200>)
- 800030e:	685b      	ldr	r3, [r3, #4]
- 8000310:	4a11      	ldr	r2, [pc, #68]	; (8000358 <GPIO_Init+0x200>)
- 8000312:	f023 03c0 	bic.w	r3, r3, #192	; 0xc0
- 8000316:	6053      	str	r3, [r2, #4]
-	GPIOA->BSRR |= GPIO_BSRR_BS9;
- 8000318:	4b0f      	ldr	r3, [pc, #60]	; (8000358 <GPIO_Init+0x200>)
- 800031a:	691b      	ldr	r3, [r3, #16]
- 800031c:	4a0e      	ldr	r2, [pc, #56]	; (8000358 <GPIO_Init+0x200>)
- 800031e:	f443 7300 	orr.w	r3, r3, #512	; 0x200
- 8000322:	6113      	str	r3, [r2, #16]
-	//RST
-	GPIOA->CRH |= GPIO_CRH_MODE10;
- 8000324:	4b0c      	ldr	r3, [pc, #48]	; (8000358 <GPIO_Init+0x200>)
- 8000326:	685b      	ldr	r3, [r3, #4]
- 8000328:	4a0b      	ldr	r2, [pc, #44]	; (8000358 <GPIO_Init+0x200>)
- 800032a:	f443 7340 	orr.w	r3, r3, #768	; 0x300
- 800032e:	6053      	str	r3, [r2, #4]
-	GPIOA->CRH &= ~GPIO_CRH_CNF10;
- 8000330:	4b09      	ldr	r3, [pc, #36]	; (8000358 <GPIO_Init+0x200>)
- 8000332:	685b      	ldr	r3, [r3, #4]
- 8000334:	4a08      	ldr	r2, [pc, #32]	; (8000358 <GPIO_Init+0x200>)
- 8000336:	f423 6340 	bic.w	r3, r3, #3072	; 0xc00
- 800033a:	6053      	str	r3, [r2, #4]
-	GPIOA->BSRR |= GPIO_BSRR_BS10;
- 800033c:	4b06      	ldr	r3, [pc, #24]	; (8000358 <GPIO_Init+0x200>)
- 800033e:	691b      	ldr	r3, [r3, #16]
- 8000340:	4a05      	ldr	r2, [pc, #20]	; (8000358 <GPIO_Init+0x200>)
- 8000342:	f443 6380 	orr.w	r3, r3, #1024	; 0x400
- 8000346:	6113      	str	r3, [r2, #16]
-}
- 8000348:	bf00      	nop
- 800034a:	46bd      	mov	sp, r7
- 800034c:	bc80      	pop	{r7}
- 800034e:	4770      	bx	lr
- 8000350:	40021000 	.word	0x40021000
- 8000354:	40010c00 	.word	0x40010c00
- 8000358:	40010800 	.word	0x40010800
-
-0800035c <ILI_Reset>:
-	}
-	else
-		GPIOB->BSRR |= GPIO_BSRR_BR0;
-
-}
-void ILI_Reset(uint32_t cmd){
- 800035c:	b580      	push	{r7, lr}
- 800035e:	b082      	sub	sp, #8
- 8000360:	af00      	add	r7, sp, #0
- 8000362:	6078      	str	r0, [r7, #4]
-	CS_ON;
- 8000364:	4b18      	ldr	r3, [pc, #96]	; (80003c8 <ILI_Reset+0x6c>)
- 8000366:	691b      	ldr	r3, [r3, #16]
- 8000368:	4a17      	ldr	r2, [pc, #92]	; (80003c8 <ILI_Reset+0x6c>)
- 800036a:	f043 7300 	orr.w	r3, r3, #33554432	; 0x2000000
- 800036e:	6113      	str	r3, [r2, #16]
-	RSx_ON;
- 8000370:	4b15      	ldr	r3, [pc, #84]	; (80003c8 <ILI_Reset+0x6c>)
- 8000372:	691b      	ldr	r3, [r3, #16]
- 8000374:	4a14      	ldr	r2, [pc, #80]	; (80003c8 <ILI_Reset+0x6c>)
- 8000376:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
- 800037a:	6113      	str	r3, [r2, #16]
-	WR_ON;
- 800037c:	4b13      	ldr	r3, [pc, #76]	; (80003cc <ILI_Reset+0x70>)
- 800037e:	691b      	ldr	r3, [r3, #16]
- 8000380:	4a12      	ldr	r2, [pc, #72]	; (80003cc <ILI_Reset+0x70>)
- 8000382:	f043 6380 	orr.w	r3, r3, #67108864	; 0x4000000
- 8000386:	6113      	str	r3, [r2, #16]
-	RST_ON;
- 8000388:	4b0f      	ldr	r3, [pc, #60]	; (80003c8 <ILI_Reset+0x6c>)
- 800038a:	691b      	ldr	r3, [r3, #16]
- 800038c:	4a0e      	ldr	r2, [pc, #56]	; (80003c8 <ILI_Reset+0x6c>)
- 800038e:	f043 6380 	orr.w	r3, r3, #67108864	; 0x4000000
- 8000392:	6113      	str	r3, [r2, #16]
-	delay_time(125);
- 8000394:	207d      	movs	r0, #125	; 0x7d
- 8000396:	f000 f824 	bl	80003e2 <delay_time>
-	//Send_Command(cmd);
-	WR_OFF;
- 800039a:	4b0c      	ldr	r3, [pc, #48]	; (80003cc <ILI_Reset+0x70>)
- 800039c:	691b      	ldr	r3, [r3, #16]
- 800039e:	4a0b      	ldr	r2, [pc, #44]	; (80003cc <ILI_Reset+0x70>)
- 80003a0:	f443 6380 	orr.w	r3, r3, #1024	; 0x400
- 80003a4:	6113      	str	r3, [r2, #16]
-	RSx_OFF;
- 80003a6:	4b08      	ldr	r3, [pc, #32]	; (80003c8 <ILI_Reset+0x6c>)
- 80003a8:	691b      	ldr	r3, [r3, #16]
- 80003aa:	4a07      	ldr	r2, [pc, #28]	; (80003c8 <ILI_Reset+0x6c>)
- 80003ac:	f443 7380 	orr.w	r3, r3, #256	; 0x100
- 80003b0:	6113      	str	r3, [r2, #16]
-	CS_OFF;
- 80003b2:	4b05      	ldr	r3, [pc, #20]	; (80003c8 <ILI_Reset+0x6c>)
- 80003b4:	691b      	ldr	r3, [r3, #16]
- 80003b6:	4a04      	ldr	r2, [pc, #16]	; (80003c8 <ILI_Reset+0x6c>)
- 80003b8:	f443 7300 	orr.w	r3, r3, #512	; 0x200
- 80003bc:	6113      	str	r3, [r2, #16]
-}
- 80003be:	bf00      	nop
- 80003c0:	3708      	adds	r7, #8
- 80003c2:	46bd      	mov	sp, r7
- 80003c4:	bd80      	pop	{r7, pc}
- 80003c6:	bf00      	nop
- 80003c8:	40010800 	.word	0x40010800
- 80003cc:	40010c00 	.word	0x40010c00
-
-080003d0 <ILI_9341_init>:
-
-void ILI_9341_init(){
- 80003d0:	b580      	push	{r7, lr}
- 80003d2:	af00      	add	r7, sp, #0
-	GPIO_Init();
- 80003d4:	f7ff fec0 	bl	8000158 <GPIO_Init>
-
-	ILI_Reset(0x10);
- 80003d8:	2010      	movs	r0, #16
- 80003da:	f7ff ffbf 	bl	800035c <ILI_Reset>
-}
- 80003de:	bf00      	nop
- 80003e0:	bd80      	pop	{r7, pc}
-
-080003e2 <delay_time>:
- *      Author: Sokolov EvgenII
+08000158 <I2C_init>:
  */
+
+#include "stm32f103xb.h"
+#include <IRQ.h>
+
+void I2C_init(){
+ 8000158:	b580      	push	{r7, lr}
+ 800015a:	af00      	add	r7, sp, #0
+/*включение тактирования портов для интерфейса*/
+    RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;		//Включил тактирование на шине с интрейсом
+ 800015c:	4b2f      	ldr	r3, [pc, #188]	; (800021c <I2C_init+0xc4>)
+ 800015e:	69db      	ldr	r3, [r3, #28]
+ 8000160:	4a2e      	ldr	r2, [pc, #184]	; (800021c <I2C_init+0xc4>)
+ 8000162:	f443 1300 	orr.w	r3, r3, #2097152	; 0x200000
+ 8000166:	61d3      	str	r3, [r2, #28]
+
+ /* Настройка пина
+  * SCL -> I2C clock 	=> PB6	Alternative func.open drain
+  * SDA -> I2C Data I/O => PB7	Alternative func.open drain*/
+    GPIOB->CRL &= ~GPIO_CRL_CNF6;	//Обнулил регистр
+ 8000168:	4b2d      	ldr	r3, [pc, #180]	; (8000220 <I2C_init+0xc8>)
+ 800016a:	681b      	ldr	r3, [r3, #0]
+ 800016c:	4a2c      	ldr	r2, [pc, #176]	; (8000220 <I2C_init+0xc8>)
+ 800016e:	f023 6340 	bic.w	r3, r3, #201326592	; 0xc000000
+ 8000172:	6013      	str	r3, [r2, #0]
+    GPIOB->CRL |= GPIO_CRL_CNF6;	//Open-drain
+ 8000174:	4b2a      	ldr	r3, [pc, #168]	; (8000220 <I2C_init+0xc8>)
+ 8000176:	681b      	ldr	r3, [r3, #0]
+ 8000178:	4a29      	ldr	r2, [pc, #164]	; (8000220 <I2C_init+0xc8>)
+ 800017a:	f043 6340 	orr.w	r3, r3, #201326592	; 0xc000000
+ 800017e:	6013      	str	r3, [r2, #0]
+    GPIOB->CRL |= GPIO_CRL_MODE6;	//Alternative func Макс 50МГц т.к частота шины
+ 8000180:	4b27      	ldr	r3, [pc, #156]	; (8000220 <I2C_init+0xc8>)
+ 8000182:	681b      	ldr	r3, [r3, #0]
+ 8000184:	4a26      	ldr	r2, [pc, #152]	; (8000220 <I2C_init+0xc8>)
+ 8000186:	f043 7340 	orr.w	r3, r3, #50331648	; 0x3000000
+ 800018a:	6013      	str	r3, [r2, #0]
+
+    GPIOB->CRL &= ~GPIO_CRL_CNF7;
+ 800018c:	4b24      	ldr	r3, [pc, #144]	; (8000220 <I2C_init+0xc8>)
+ 800018e:	681b      	ldr	r3, [r3, #0]
+ 8000190:	4a23      	ldr	r2, [pc, #140]	; (8000220 <I2C_init+0xc8>)
+ 8000192:	f023 4340 	bic.w	r3, r3, #3221225472	; 0xc0000000
+ 8000196:	6013      	str	r3, [r2, #0]
+    GPIOB->CRL |= GPIO_CRL_CNF7;
+ 8000198:	4b21      	ldr	r3, [pc, #132]	; (8000220 <I2C_init+0xc8>)
+ 800019a:	681b      	ldr	r3, [r3, #0]
+ 800019c:	4a20      	ldr	r2, [pc, #128]	; (8000220 <I2C_init+0xc8>)
+ 800019e:	f043 4340 	orr.w	r3, r3, #3221225472	; 0xc0000000
+ 80001a2:	6013      	str	r3, [r2, #0]
+    GPIOB->CRL |= GPIO_CRL_MODE7;
+ 80001a4:	4b1e      	ldr	r3, [pc, #120]	; (8000220 <I2C_init+0xc8>)
+ 80001a6:	681b      	ldr	r3, [r3, #0]
+ 80001a8:	4a1d      	ldr	r2, [pc, #116]	; (8000220 <I2C_init+0xc8>)
+ 80001aa:	f043 5340 	orr.w	r3, r3, #805306368	; 0x30000000
+ 80001ae:	6013      	str	r3, [r2, #0]
+     * SM = 1000ns | FM = 300ns
+     * Выбран StandartMode
+     * TRISE = (SM/Tclk) +1 => 0x25
+     * CCR = Tsm(36MHz - частота шины APB)/2*10kHz - стандратная скорость = 180 => 0xB4*/
+
+    I2C1->CR1 &= ~I2C_CR1_PE;		//Отключаю интерфейс для его настройки
+ 80001b0:	4b1c      	ldr	r3, [pc, #112]	; (8000224 <I2C_init+0xcc>)
+ 80001b2:	681b      	ldr	r3, [r3, #0]
+ 80001b4:	4a1b      	ldr	r2, [pc, #108]	; (8000224 <I2C_init+0xcc>)
+ 80001b6:	f023 0301 	bic.w	r3, r3, #1
+ 80001ba:	6013      	str	r3, [r2, #0]
+    I2C1->CR1 |= I2C_CR1_SWRST;		//Перезагружаю для обнуления регистров
+ 80001bc:	4b19      	ldr	r3, [pc, #100]	; (8000224 <I2C_init+0xcc>)
+ 80001be:	681b      	ldr	r3, [r3, #0]
+ 80001c0:	4a18      	ldr	r2, [pc, #96]	; (8000224 <I2C_init+0xcc>)
+ 80001c2:	f443 4300 	orr.w	r3, r3, #32768	; 0x8000
+ 80001c6:	6013      	str	r3, [r2, #0]
+    delay_time(5);
+ 80001c8:	2005      	movs	r0, #5
+ 80001ca:	f000 f82d 	bl	8000228 <delay_time>
+    I2C1->CR1 &= ~I2C_CR1_SWRST;	//Действия аналогично HAL
+ 80001ce:	4b15      	ldr	r3, [pc, #84]	; (8000224 <I2C_init+0xcc>)
+ 80001d0:	681b      	ldr	r3, [r3, #0]
+ 80001d2:	4a14      	ldr	r2, [pc, #80]	; (8000224 <I2C_init+0xcc>)
+ 80001d4:	f423 4300 	bic.w	r3, r3, #32768	; 0x8000
+ 80001d8:	6013      	str	r3, [r2, #0]
+    delay_time(5);
+ 80001da:	2005      	movs	r0, #5
+ 80001dc:	f000 f824 	bl	8000228 <delay_time>
+    I2C1->CR1 &= ~I2C_CR1_SMBUS;	//Режим I2C
+ 80001e0:	4b10      	ldr	r3, [pc, #64]	; (8000224 <I2C_init+0xcc>)
+ 80001e2:	681b      	ldr	r3, [r3, #0]
+ 80001e4:	4a0f      	ldr	r2, [pc, #60]	; (8000224 <I2C_init+0xcc>)
+ 80001e6:	f023 0302 	bic.w	r3, r3, #2
+ 80001ea:	6013      	str	r3, [r2, #0]
+
+    I2C1->CR2 = 0x24; 				//HEX(24) = 36MHz (MAX для шины APB1)
+ 80001ec:	4b0d      	ldr	r3, [pc, #52]	; (8000224 <I2C_init+0xcc>)
+ 80001ee:	2224      	movs	r2, #36	; 0x24
+ 80001f0:	605a      	str	r2, [r3, #4]
+
+    I2C1->CCR &= ~I2C_CCR_FS;		//Включил стандартный режи работы интерфейса
+ 80001f2:	4b0c      	ldr	r3, [pc, #48]	; (8000224 <I2C_init+0xcc>)
+ 80001f4:	69db      	ldr	r3, [r3, #28]
+ 80001f6:	4a0b      	ldr	r2, [pc, #44]	; (8000224 <I2C_init+0xcc>)
+ 80001f8:	f423 4300 	bic.w	r3, r3, #32768	; 0x8000
+ 80001fc:	61d3      	str	r3, [r2, #28]
+    I2C1->CCR = 0xB4;				//Задаю тактирование для SCL
+ 80001fe:	4b09      	ldr	r3, [pc, #36]	; (8000224 <I2C_init+0xcc>)
+ 8000200:	22b4      	movs	r2, #180	; 0xb4
+ 8000202:	61da      	str	r2, [r3, #28]
+    I2C1->TRISE = 0x25;				//Время нарастания фронта сигнала
+ 8000204:	4b07      	ldr	r3, [pc, #28]	; (8000224 <I2C_init+0xcc>)
+ 8000206:	2225      	movs	r2, #37	; 0x25
+ 8000208:	621a      	str	r2, [r3, #32]
+
+    I2C1->CR1 |= I2C_CR1_PE;		//Включение интерфейса
+ 800020a:	4b06      	ldr	r3, [pc, #24]	; (8000224 <I2C_init+0xcc>)
+ 800020c:	681b      	ldr	r3, [r3, #0]
+ 800020e:	4a05      	ldr	r2, [pc, #20]	; (8000224 <I2C_init+0xcc>)
+ 8000210:	f043 0301 	orr.w	r3, r3, #1
+ 8000214:	6013      	str	r3, [r2, #0]
+}
+ 8000216:	bf00      	nop
+ 8000218:	bd80      	pop	{r7, pc}
+ 800021a:	bf00      	nop
+ 800021c:	40021000 	.word	0x40021000
+ 8000220:	40010c00 	.word	0x40010c00
+ 8000224:	40005400 	.word	0x40005400
+
+08000228 <delay_time>:
 #include <IRQ.h>
 GLOBAL_TIME	TIME = GLOBAL_TIME_DEFAULT;
+static uint32_t TICK = 0;
+
 
 void delay_time(uint32_t time){
- 80003e2:	b480      	push	{r7}
- 80003e4:	b085      	sub	sp, #20
- 80003e6:	af00      	add	r7, sp, #0
- 80003e8:	6078      	str	r0, [r7, #4]
+ 8000228:	b580      	push	{r7, lr}
+ 800022a:	b084      	sub	sp, #16
+ 800022c:	af00      	add	r7, sp, #0
+ 800022e:	6078      	str	r0, [r7, #4]
 
-    for (uint32_t i = 0; i < time; i++);
- 80003ea:	2300      	movs	r3, #0
- 80003ec:	60fb      	str	r3, [r7, #12]
- 80003ee:	e002      	b.n	80003f6 <delay_time+0x14>
- 80003f0:	68fb      	ldr	r3, [r7, #12]
- 80003f2:	3301      	adds	r3, #1
- 80003f4:	60fb      	str	r3, [r7, #12]
- 80003f6:	68fa      	ldr	r2, [r7, #12]
- 80003f8:	687b      	ldr	r3, [r7, #4]
- 80003fa:	429a      	cmp	r2, r3
- 80003fc:	d3f8      	bcc.n	80003f0 <delay_time+0xe>
-    	//__NOP;
+    uint32_t tick_start;
+    uint32_t w_8 = time;
+ 8000230:	687b      	ldr	r3, [r7, #4]
+ 8000232:	60fb      	str	r3, [r7, #12]
+    tick_start = GetTick();
+ 8000234:	f000 f816 	bl	8000264 <GetTick>
+ 8000238:	60b8      	str	r0, [r7, #8]
+
+    if(w_8 < MAX_TIME)
+ 800023a:	68fb      	ldr	r3, [r7, #12]
+ 800023c:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 8000240:	d002      	beq.n	8000248 <delay_time+0x20>
+	w_8 += (uint32_t)(0x1);
+ 8000242:	68fb      	ldr	r3, [r7, #12]
+ 8000244:	3301      	adds	r3, #1
+ 8000246:	60fb      	str	r3, [r7, #12]
+    while((GetTick() - tick_start) < w_8 );
+ 8000248:	bf00      	nop
+ 800024a:	f000 f80b 	bl	8000264 <GetTick>
+ 800024e:	4602      	mov	r2, r0
+ 8000250:	68bb      	ldr	r3, [r7, #8]
+ 8000252:	1ad3      	subs	r3, r2, r3
+ 8000254:	68fa      	ldr	r2, [r7, #12]
+ 8000256:	429a      	cmp	r2, r3
+ 8000258:	d8f7      	bhi.n	800024a <delay_time+0x22>
 }
- 80003fe:	bf00      	nop
- 8000400:	bf00      	nop
- 8000402:	3714      	adds	r7, #20
- 8000404:	46bd      	mov	sp, r7
- 8000406:	bc80      	pop	{r7}
- 8000408:	4770      	bx	lr
-	...
+ 800025a:	bf00      	nop
+ 800025c:	bf00      	nop
+ 800025e:	3710      	adds	r7, #16
+ 8000260:	46bd      	mov	sp, r7
+ 8000262:	bd80      	pop	{r7, pc}
 
-0800040c <SysTick_Handler>:
+08000264 <GetTick>:
 
-uint32_t GetTime(uint32_t timer){
-	return timer;
+uint32_t GetTick(void){
+ 8000264:	b480      	push	{r7}
+ 8000266:	af00      	add	r7, sp, #0
+    return TICK;
+ 8000268:	4b02      	ldr	r3, [pc, #8]	; (8000274 <GetTick+0x10>)
+ 800026a:	681b      	ldr	r3, [r3, #0]
 }
+ 800026c:	4618      	mov	r0, r3
+ 800026e:	46bd      	mov	sp, r7
+ 8000270:	bc80      	pop	{r7}
+ 8000272:	4770      	bx	lr
+ 8000274:	2000002c 	.word	0x2000002c
+
+08000278 <SysTick_Handler>:
 
 void SysTick_Handler(){
- 800040c:	b480      	push	{r7}
- 800040e:	af00      	add	r7, sp, #0
-
-	TIME.ms++;
- 8000410:	4b16      	ldr	r3, [pc, #88]	; (800046c <SysTick_Handler+0x60>)
- 8000412:	681b      	ldr	r3, [r3, #0]
- 8000414:	3301      	adds	r3, #1
- 8000416:	4a15      	ldr	r2, [pc, #84]	; (800046c <SysTick_Handler+0x60>)
- 8000418:	6013      	str	r3, [r2, #0]
-	if(TIME.ms == 1000){
- 800041a:	4b14      	ldr	r3, [pc, #80]	; (800046c <SysTick_Handler+0x60>)
- 800041c:	681b      	ldr	r3, [r3, #0]
- 800041e:	f5b3 7f7a 	cmp.w	r3, #1000	; 0x3e8
- 8000422:	d107      	bne.n	8000434 <SysTick_Handler+0x28>
-		TIME.ms = 0;
- 8000424:	4b11      	ldr	r3, [pc, #68]	; (800046c <SysTick_Handler+0x60>)
- 8000426:	2200      	movs	r2, #0
- 8000428:	601a      	str	r2, [r3, #0]
-		TIME.sec++;
- 800042a:	4b10      	ldr	r3, [pc, #64]	; (800046c <SysTick_Handler+0x60>)
- 800042c:	685b      	ldr	r3, [r3, #4]
- 800042e:	3301      	adds	r3, #1
- 8000430:	4a0e      	ldr	r2, [pc, #56]	; (800046c <SysTick_Handler+0x60>)
- 8000432:	6053      	str	r3, [r2, #4]
-	}
-	else if(TIME.ms > 1001){
-		//todo ERR!
-	}
-	if(TIME.sec == 60){
- 8000434:	4b0d      	ldr	r3, [pc, #52]	; (800046c <SysTick_Handler+0x60>)
- 8000436:	685b      	ldr	r3, [r3, #4]
- 8000438:	2b3c      	cmp	r3, #60	; 0x3c
- 800043a:	d107      	bne.n	800044c <SysTick_Handler+0x40>
-		TIME.sec = 0;
- 800043c:	4b0b      	ldr	r3, [pc, #44]	; (800046c <SysTick_Handler+0x60>)
- 800043e:	2200      	movs	r2, #0
- 8000440:	605a      	str	r2, [r3, #4]
-		TIME.min++;
- 8000442:	4b0a      	ldr	r3, [pc, #40]	; (800046c <SysTick_Handler+0x60>)
- 8000444:	689b      	ldr	r3, [r3, #8]
- 8000446:	3301      	adds	r3, #1
- 8000448:	4a08      	ldr	r2, [pc, #32]	; (800046c <SysTick_Handler+0x60>)
- 800044a:	6093      	str	r3, [r2, #8]
-	}
-	if(TIME.min == 60){
- 800044c:	4b07      	ldr	r3, [pc, #28]	; (800046c <SysTick_Handler+0x60>)
- 800044e:	689b      	ldr	r3, [r3, #8]
- 8000450:	2b3c      	cmp	r3, #60	; 0x3c
- 8000452:	d107      	bne.n	8000464 <SysTick_Handler+0x58>
-		TIME.min = 0;
- 8000454:	4b05      	ldr	r3, [pc, #20]	; (800046c <SysTick_Handler+0x60>)
- 8000456:	2200      	movs	r2, #0
- 8000458:	609a      	str	r2, [r3, #8]
-		TIME.hr++;
- 800045a:	4b04      	ldr	r3, [pc, #16]	; (800046c <SysTick_Handler+0x60>)
- 800045c:	68db      	ldr	r3, [r3, #12]
- 800045e:	3301      	adds	r3, #1
- 8000460:	4a02      	ldr	r2, [pc, #8]	; (800046c <SysTick_Handler+0x60>)
- 8000462:	60d3      	str	r3, [r2, #12]
-	}
+ 8000278:	b480      	push	{r7}
+ 800027a:	af00      	add	r7, sp, #0
+    TICK++;
+ 800027c:	4b04      	ldr	r3, [pc, #16]	; (8000290 <SysTick_Handler+0x18>)
+ 800027e:	681b      	ldr	r3, [r3, #0]
+ 8000280:	3301      	adds	r3, #1
+ 8000282:	4a03      	ldr	r2, [pc, #12]	; (8000290 <SysTick_Handler+0x18>)
+ 8000284:	6013      	str	r3, [r2, #0]
 }
- 8000464:	bf00      	nop
- 8000466:	46bd      	mov	sp, r7
- 8000468:	bc80      	pop	{r7}
- 800046a:	4770      	bx	lr
- 800046c:	2000001c 	.word	0x2000001c
+ 8000286:	bf00      	nop
+ 8000288:	46bd      	mov	sp, r7
+ 800028a:	bc80      	pop	{r7}
+ 800028c:	4770      	bx	lr
+ 800028e:	bf00      	nop
+ 8000290:	2000002c 	.word	0x2000002c
 
-08000470 <RCC_init>:
- *  Created on: Jun 19, 2023
- *      Author: Sokolov EvgenII
+08000294 <TIM3_IRQHandler>:
+
+void TIM3_IRQHandler(void){
+ 8000294:	b480      	push	{r7}
+ 8000296:	af00      	add	r7, sp, #0
+    if(TIM3->SR & TIM_SR_UIF)
+ 8000298:	4b1c      	ldr	r3, [pc, #112]	; (800030c <TIM3_IRQHandler+0x78>)
+ 800029a:	691b      	ldr	r3, [r3, #16]
+ 800029c:	f003 0301 	and.w	r3, r3, #1
+ 80002a0:	2b00      	cmp	r3, #0
+ 80002a2:	d005      	beq.n	80002b0 <TIM3_IRQHandler+0x1c>
+	TIM3->SR &= ~TIM_SR_UIF;
+ 80002a4:	4b19      	ldr	r3, [pc, #100]	; (800030c <TIM3_IRQHandler+0x78>)
+ 80002a6:	691b      	ldr	r3, [r3, #16]
+ 80002a8:	4a18      	ldr	r2, [pc, #96]	; (800030c <TIM3_IRQHandler+0x78>)
+ 80002aa:	f023 0301 	bic.w	r3, r3, #1
+ 80002ae:	6113      	str	r3, [r2, #16]
+    TIME.ms++;
+ 80002b0:	4b17      	ldr	r3, [pc, #92]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002b2:	681b      	ldr	r3, [r3, #0]
+ 80002b4:	3301      	adds	r3, #1
+ 80002b6:	4a16      	ldr	r2, [pc, #88]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002b8:	6013      	str	r3, [r2, #0]
+    if(TIME.ms == 1000){
+ 80002ba:	4b15      	ldr	r3, [pc, #84]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002bc:	681b      	ldr	r3, [r3, #0]
+ 80002be:	f5b3 7f7a 	cmp.w	r3, #1000	; 0x3e8
+ 80002c2:	d107      	bne.n	80002d4 <TIM3_IRQHandler+0x40>
+	    TIME.ms = 0;
+ 80002c4:	4b12      	ldr	r3, [pc, #72]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002c6:	2200      	movs	r2, #0
+ 80002c8:	601a      	str	r2, [r3, #0]
+	    TIME.sec++;
+ 80002ca:	4b11      	ldr	r3, [pc, #68]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002cc:	685b      	ldr	r3, [r3, #4]
+ 80002ce:	3301      	adds	r3, #1
+ 80002d0:	4a0f      	ldr	r2, [pc, #60]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002d2:	6053      	str	r3, [r2, #4]
+    }
+    else if(TIME.ms > 1001){
+	    //todo ERR!
+    }
+    if(TIME.sec == 60){
+ 80002d4:	4b0e      	ldr	r3, [pc, #56]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002d6:	685b      	ldr	r3, [r3, #4]
+ 80002d8:	2b3c      	cmp	r3, #60	; 0x3c
+ 80002da:	d107      	bne.n	80002ec <TIM3_IRQHandler+0x58>
+	    TIME.sec = 0;
+ 80002dc:	4b0c      	ldr	r3, [pc, #48]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002de:	2200      	movs	r2, #0
+ 80002e0:	605a      	str	r2, [r3, #4]
+	    TIME.min++;
+ 80002e2:	4b0b      	ldr	r3, [pc, #44]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002e4:	689b      	ldr	r3, [r3, #8]
+ 80002e6:	3301      	adds	r3, #1
+ 80002e8:	4a09      	ldr	r2, [pc, #36]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002ea:	6093      	str	r3, [r2, #8]
+    }
+    if(TIME.min == 60){
+ 80002ec:	4b08      	ldr	r3, [pc, #32]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002ee:	689b      	ldr	r3, [r3, #8]
+ 80002f0:	2b3c      	cmp	r3, #60	; 0x3c
+ 80002f2:	d107      	bne.n	8000304 <TIM3_IRQHandler+0x70>
+	    TIME.min = 0;
+ 80002f4:	4b06      	ldr	r3, [pc, #24]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002f6:	2200      	movs	r2, #0
+ 80002f8:	609a      	str	r2, [r3, #8]
+	    TIME.hr++;
+ 80002fa:	4b05      	ldr	r3, [pc, #20]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 80002fc:	68db      	ldr	r3, [r3, #12]
+ 80002fe:	3301      	adds	r3, #1
+ 8000300:	4a03      	ldr	r2, [pc, #12]	; (8000310 <TIM3_IRQHandler+0x7c>)
+ 8000302:	60d3      	str	r3, [r2, #12]
+    }
+}
+ 8000304:	bf00      	nop
+ 8000306:	46bd      	mov	sp, r7
+ 8000308:	bc80      	pop	{r7}
+ 800030a:	4770      	bx	lr
+ 800030c:	40000400 	.word	0x40000400
+ 8000310:	2000001c 	.word	0x2000001c
+
+08000314 <DMA1_Channel1_IRQHandler>:
+
+void DMA1_Channel1_IRQHandler(void){
+ 8000314:	b480      	push	{r7}
+ 8000316:	af00      	add	r7, sp, #0
+
+    extern uint16_t buff[4];
+    if(DMA1->ISR & DMA_ISR_TCIF1){		//Если прерывание после удачной передачи данных
+ 8000318:	4b0f      	ldr	r3, [pc, #60]	; (8000358 <DMA1_Channel1_IRQHandler+0x44>)
+ 800031a:	681b      	ldr	r3, [r3, #0]
+ 800031c:	f003 0302 	and.w	r3, r3, #2
+ 8000320:	2b00      	cmp	r3, #0
+ 8000322:	d00c      	beq.n	800033e <DMA1_Channel1_IRQHandler+0x2a>
+		DMA1->IFCR = DMA_IFCR_CGIF1;		//Снимаю флаг успешной передачи
+ 8000324:	4b0c      	ldr	r3, [pc, #48]	; (8000358 <DMA1_Channel1_IRQHandler+0x44>)
+ 8000326:	2201      	movs	r2, #1
+ 8000328:	605a      	str	r2, [r3, #4]
+		TIM3->CCR4 = (uint32_t)buff[0];
+ 800032a:	4b0c      	ldr	r3, [pc, #48]	; (800035c <DMA1_Channel1_IRQHandler+0x48>)
+ 800032c:	881a      	ldrh	r2, [r3, #0]
+ 800032e:	4b0c      	ldr	r3, [pc, #48]	; (8000360 <DMA1_Channel1_IRQHandler+0x4c>)
+ 8000330:	641a      	str	r2, [r3, #64]	; 0x40
+		GPIOC->BSRR |= GPIO_BSRR_BS13;
+ 8000332:	4b0c      	ldr	r3, [pc, #48]	; (8000364 <DMA1_Channel1_IRQHandler+0x50>)
+ 8000334:	691b      	ldr	r3, [r3, #16]
+ 8000336:	4a0b      	ldr	r2, [pc, #44]	; (8000364 <DMA1_Channel1_IRQHandler+0x50>)
+ 8000338:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
+ 800033c:	6113      	str	r3, [r2, #16]
+    }
+    if(DMA1->ISR & DMA_ISR_TEIF1){		//Если прерывание после неудачной передачи данных
+ 800033e:	4b06      	ldr	r3, [pc, #24]	; (8000358 <DMA1_Channel1_IRQHandler+0x44>)
+ 8000340:	681b      	ldr	r3, [r3, #0]
+ 8000342:	f003 0308 	and.w	r3, r3, #8
+ 8000346:	2b00      	cmp	r3, #0
+ 8000348:	d002      	beq.n	8000350 <DMA1_Channel1_IRQHandler+0x3c>
+    	DMA1->IFCR = DMA_IFCR_CTEIF1;		//Снятие флага об ошибке передачи todo выполнить обработку ошибки
+ 800034a:	4b03      	ldr	r3, [pc, #12]	; (8000358 <DMA1_Channel1_IRQHandler+0x44>)
+ 800034c:	2208      	movs	r2, #8
+ 800034e:	605a      	str	r2, [r3, #4]
+    }
+}
+ 8000350:	bf00      	nop
+ 8000352:	46bd      	mov	sp, r7
+ 8000354:	bc80      	pop	{r7}
+ 8000356:	4770      	bx	lr
+ 8000358:	40020000 	.word	0x40020000
+ 800035c:	20000034 	.word	0x20000034
+ 8000360:	40000400 	.word	0x40000400
+ 8000364:	40011000 	.word	0x40011000
+
+08000368 <LCD_SendInternal>:
+#define LCD_ADDR	0x38
+#define PIN_RS    (1 << 0)
+#define PIN_EN    (1 << 2)
+#define BACKLIGHT (1 << 3)
+
+ErrorStatus LCD_SendInternal(uint8_t lcd_addr, uint8_t data, uint8_t flags) {
+ 8000368:	b480      	push	{r7}
+ 800036a:	b085      	sub	sp, #20
+ 800036c:	af00      	add	r7, sp, #0
+ 800036e:	4603      	mov	r3, r0
+ 8000370:	71fb      	strb	r3, [r7, #7]
+ 8000372:	460b      	mov	r3, r1
+ 8000374:	71bb      	strb	r3, [r7, #6]
+ 8000376:	4613      	mov	r3, r2
+ 8000378:	717b      	strb	r3, [r7, #5]
+    uint8_t up = data & 0xF0;
+ 800037a:	79bb      	ldrb	r3, [r7, #6]
+ 800037c:	f023 030f 	bic.w	r3, r3, #15
+ 8000380:	73fb      	strb	r3, [r7, #15]
+    uint8_t lo = (data << 4) & 0xF0;
+ 8000382:	79bb      	ldrb	r3, [r7, #6]
+ 8000384:	011b      	lsls	r3, r3, #4
+ 8000386:	73bb      	strb	r3, [r7, #14]
+
+    uint8_t data_arr[4];
+    data_arr[0] = up|flags|BACKLIGHT|PIN_EN;
+ 8000388:	7bfa      	ldrb	r2, [r7, #15]
+ 800038a:	797b      	ldrb	r3, [r7, #5]
+ 800038c:	4313      	orrs	r3, r2
+ 800038e:	b2db      	uxtb	r3, r3
+ 8000390:	f043 030c 	orr.w	r3, r3, #12
+ 8000394:	b2db      	uxtb	r3, r3
+ 8000396:	723b      	strb	r3, [r7, #8]
+    data_arr[1] = up|flags|BACKLIGHT;
+ 8000398:	7bfa      	ldrb	r2, [r7, #15]
+ 800039a:	797b      	ldrb	r3, [r7, #5]
+ 800039c:	4313      	orrs	r3, r2
+ 800039e:	b2db      	uxtb	r3, r3
+ 80003a0:	f043 0308 	orr.w	r3, r3, #8
+ 80003a4:	b2db      	uxtb	r3, r3
+ 80003a6:	727b      	strb	r3, [r7, #9]
+    data_arr[2] = lo|flags|BACKLIGHT|PIN_EN;
+ 80003a8:	7bba      	ldrb	r2, [r7, #14]
+ 80003aa:	797b      	ldrb	r3, [r7, #5]
+ 80003ac:	4313      	orrs	r3, r2
+ 80003ae:	b2db      	uxtb	r3, r3
+ 80003b0:	f043 030c 	orr.w	r3, r3, #12
+ 80003b4:	b2db      	uxtb	r3, r3
+ 80003b6:	72bb      	strb	r3, [r7, #10]
+    data_arr[3] = lo|flags|BACKLIGHT;
+ 80003b8:	7bba      	ldrb	r2, [r7, #14]
+ 80003ba:	797b      	ldrb	r3, [r7, #5]
+ 80003bc:	4313      	orrs	r3, r2
+ 80003be:	b2db      	uxtb	r3, r3
+ 80003c0:	f043 0308 	orr.w	r3, r3, #8
+ 80003c4:	b2db      	uxtb	r3, r3
+ 80003c6:	72fb      	strb	r3, [r7, #11]
+
+    return SUCCESS;
+ 80003c8:	2300      	movs	r3, #0
+}
+ 80003ca:	4618      	mov	r0, r3
+ 80003cc:	3714      	adds	r7, #20
+ 80003ce:	46bd      	mov	sp, r7
+ 80003d0:	bc80      	pop	{r7}
+ 80003d2:	4770      	bx	lr
+
+080003d4 <LCD_SendCommand>:
+
+void LCD_SendCommand(uint8_t lcd_addr, uint8_t cmd) {
+ 80003d4:	b580      	push	{r7, lr}
+ 80003d6:	b082      	sub	sp, #8
+ 80003d8:	af00      	add	r7, sp, #0
+ 80003da:	4603      	mov	r3, r0
+ 80003dc:	460a      	mov	r2, r1
+ 80003de:	71fb      	strb	r3, [r7, #7]
+ 80003e0:	4613      	mov	r3, r2
+ 80003e2:	71bb      	strb	r3, [r7, #6]
+    LCD_SendInternal(lcd_addr, cmd, 0);
+ 80003e4:	79b9      	ldrb	r1, [r7, #6]
+ 80003e6:	79fb      	ldrb	r3, [r7, #7]
+ 80003e8:	2200      	movs	r2, #0
+ 80003ea:	4618      	mov	r0, r3
+ 80003ec:	f7ff ffbc 	bl	8000368 <LCD_SendInternal>
+}
+ 80003f0:	bf00      	nop
+ 80003f2:	3708      	adds	r7, #8
+ 80003f4:	46bd      	mov	sp, r7
+ 80003f6:	bd80      	pop	{r7, pc}
+
+080003f8 <LCD_SendData>:
+
+void LCD_SendData(uint8_t lcd_addr, uint8_t data) {
+ 80003f8:	b580      	push	{r7, lr}
+ 80003fa:	b082      	sub	sp, #8
+ 80003fc:	af00      	add	r7, sp, #0
+ 80003fe:	4603      	mov	r3, r0
+ 8000400:	460a      	mov	r2, r1
+ 8000402:	71fb      	strb	r3, [r7, #7]
+ 8000404:	4613      	mov	r3, r2
+ 8000406:	71bb      	strb	r3, [r7, #6]
+    LCD_SendInternal(lcd_addr, data, PIN_RS);
+ 8000408:	79b9      	ldrb	r1, [r7, #6]
+ 800040a:	79fb      	ldrb	r3, [r7, #7]
+ 800040c:	2201      	movs	r2, #1
+ 800040e:	4618      	mov	r0, r3
+ 8000410:	f7ff ffaa 	bl	8000368 <LCD_SendInternal>
+}
+ 8000414:	bf00      	nop
+ 8000416:	3708      	adds	r7, #8
+ 8000418:	46bd      	mov	sp, r7
+ 800041a:	bd80      	pop	{r7, pc}
+
+0800041c <LCD_SendString>:
+
+void LCD_SendString(uint8_t lcd_addr, char *str) {
+ 800041c:	b580      	push	{r7, lr}
+ 800041e:	b082      	sub	sp, #8
+ 8000420:	af00      	add	r7, sp, #0
+ 8000422:	4603      	mov	r3, r0
+ 8000424:	6039      	str	r1, [r7, #0]
+ 8000426:	71fb      	strb	r3, [r7, #7]
+    while(*str) {
+ 8000428:	e009      	b.n	800043e <LCD_SendString+0x22>
+        LCD_SendData(lcd_addr, (uint8_t)(*str));
+ 800042a:	683b      	ldr	r3, [r7, #0]
+ 800042c:	781a      	ldrb	r2, [r3, #0]
+ 800042e:	79fb      	ldrb	r3, [r7, #7]
+ 8000430:	4611      	mov	r1, r2
+ 8000432:	4618      	mov	r0, r3
+ 8000434:	f7ff ffe0 	bl	80003f8 <LCD_SendData>
+        str++;
+ 8000438:	683b      	ldr	r3, [r7, #0]
+ 800043a:	3301      	adds	r3, #1
+ 800043c:	603b      	str	r3, [r7, #0]
+    while(*str) {
+ 800043e:	683b      	ldr	r3, [r7, #0]
+ 8000440:	781b      	ldrb	r3, [r3, #0]
+ 8000442:	2b00      	cmp	r3, #0
+ 8000444:	d1f1      	bne.n	800042a <LCD_SendString+0xe>
+    }
+}
+ 8000446:	bf00      	nop
+ 8000448:	bf00      	nop
+ 800044a:	3708      	adds	r7, #8
+ 800044c:	46bd      	mov	sp, r7
+ 800044e:	bd80      	pop	{r7, pc}
+
+08000450 <I2C_Scan>:
+
+ErrorStatus I2C_Scan() {
+ 8000450:	b4b0      	push	{r4, r5, r7}
+ 8000452:	b087      	sub	sp, #28
+ 8000454:	af00      	add	r7, sp, #0
+    char info[] = "Scanning I2C bus...\r\n";
+ 8000456:	4b0c      	ldr	r3, [pc, #48]	; (8000488 <I2C_Scan+0x38>)
+ 8000458:	463c      	mov	r4, r7
+ 800045a:	461d      	mov	r5, r3
+ 800045c:	cd0f      	ldmia	r5!, {r0, r1, r2, r3}
+ 800045e:	c40f      	stmia	r4!, {r0, r1, r2, r3}
+ 8000460:	e895 0003 	ldmia.w	r5, {r0, r1}
+ 8000464:	6020      	str	r0, [r4, #0]
+ 8000466:	3404      	adds	r4, #4
+ 8000468:	8021      	strh	r1, [r4, #0]
+    for(uint16_t i = 0; i < 128; i++) {
+ 800046a:	2300      	movs	r3, #0
+ 800046c:	82fb      	strh	r3, [r7, #22]
+ 800046e:	e002      	b.n	8000476 <I2C_Scan+0x26>
+ 8000470:	8afb      	ldrh	r3, [r7, #22]
+ 8000472:	3301      	adds	r3, #1
+ 8000474:	82fb      	strh	r3, [r7, #22]
+ 8000476:	8afb      	ldrh	r3, [r7, #22]
+ 8000478:	2b7f      	cmp	r3, #127	; 0x7f
+ 800047a:	d9f9      	bls.n	8000470 <I2C_Scan+0x20>
+
+    }
+    return 1;
+ 800047c:	2301      	movs	r3, #1
+}
+ 800047e:	4618      	mov	r0, r3
+ 8000480:	371c      	adds	r7, #28
+ 8000482:	46bd      	mov	sp, r7
+ 8000484:	bcb0      	pop	{r4, r5, r7}
+ 8000486:	4770      	bx	lr
+ 8000488:	08000abc 	.word	0x08000abc
+
+0800048c <LCD_Init>:
+
+void LCD_Init(uint8_t lcd_addr) {
+ 800048c:	b580      	push	{r7, lr}
+ 800048e:	b082      	sub	sp, #8
+ 8000490:	af00      	add	r7, sp, #0
+ 8000492:	4603      	mov	r3, r0
+ 8000494:	71fb      	strb	r3, [r7, #7]
+    // 4-bit mode, 2 lines, 5x7 format
+    LCD_SendCommand(lcd_addr, 0b00110000);
+ 8000496:	79fb      	ldrb	r3, [r7, #7]
+ 8000498:	2130      	movs	r1, #48	; 0x30
+ 800049a:	4618      	mov	r0, r3
+ 800049c:	f7ff ff9a 	bl	80003d4 <LCD_SendCommand>
+    // display & cursor home (keep this!)
+    LCD_SendCommand(lcd_addr, 0b00000010);
+ 80004a0:	79fb      	ldrb	r3, [r7, #7]
+ 80004a2:	2102      	movs	r1, #2
+ 80004a4:	4618      	mov	r0, r3
+ 80004a6:	f7ff ff95 	bl	80003d4 <LCD_SendCommand>
+    // display on, right shift, underline off, blink off
+    LCD_SendCommand(lcd_addr, 0b00001100);
+ 80004aa:	79fb      	ldrb	r3, [r7, #7]
+ 80004ac:	210c      	movs	r1, #12
+ 80004ae:	4618      	mov	r0, r3
+ 80004b0:	f7ff ff90 	bl	80003d4 <LCD_SendCommand>
+    // clear display (optional here)
+    LCD_SendCommand(lcd_addr, 0b00000001);
+ 80004b4:	79fb      	ldrb	r3, [r7, #7]
+ 80004b6:	2101      	movs	r1, #1
+ 80004b8:	4618      	mov	r0, r3
+ 80004ba:	f7ff ff8b 	bl	80003d4 <LCD_SendCommand>
+}
+ 80004be:	bf00      	nop
+ 80004c0:	3708      	adds	r7, #8
+ 80004c2:	46bd      	mov	sp, r7
+ 80004c4:	bd80      	pop	{r7, pc}
+	...
+
+080004c8 <LCD_1602_init>:
+
+ErrorStatus LCD_1602_init() {
+ 80004c8:	b580      	push	{r7, lr}
+ 80004ca:	af00      	add	r7, sp, #0
+    I2C_Scan();
+ 80004cc:	f7ff ffc0 	bl	8000450 <I2C_Scan>
+    LCD_Init(LCD_ADDR);
+ 80004d0:	2038      	movs	r0, #56	; 0x38
+ 80004d2:	f7ff ffdb 	bl	800048c <LCD_Init>
+
+    // set address to 0x00
+    LCD_SendCommand(LCD_ADDR, 0b10000000);
+ 80004d6:	2180      	movs	r1, #128	; 0x80
+ 80004d8:	2038      	movs	r0, #56	; 0x38
+ 80004da:	f7ff ff7b 	bl	80003d4 <LCD_SendCommand>
+    LCD_SendString(LCD_ADDR, " Using 1602 LCD");
+ 80004de:	4907      	ldr	r1, [pc, #28]	; (80004fc <LCD_1602_init+0x34>)
+ 80004e0:	2038      	movs	r0, #56	; 0x38
+ 80004e2:	f7ff ff9b 	bl	800041c <LCD_SendString>
+
+    // set address to 0x40
+    LCD_SendCommand(LCD_ADDR, 0b11000000);
+ 80004e6:	21c0      	movs	r1, #192	; 0xc0
+ 80004e8:	2038      	movs	r0, #56	; 0x38
+ 80004ea:	f7ff ff73 	bl	80003d4 <LCD_SendCommand>
+    LCD_SendString(LCD_ADDR, "  over I2C bus");
+ 80004ee:	4904      	ldr	r1, [pc, #16]	; (8000500 <LCD_1602_init+0x38>)
+ 80004f0:	2038      	movs	r0, #56	; 0x38
+ 80004f2:	f7ff ff93 	bl	800041c <LCD_SendString>
+    return SUCCESS;
+ 80004f6:	2300      	movs	r3, #0
+}
+ 80004f8:	4618      	mov	r0, r3
+ 80004fa:	bd80      	pop	{r7, pc}
+ 80004fc:	08000ad4 	.word	0x08000ad4
+ 8000500:	08000ae4 	.word	0x08000ae4
+
+08000504 <__NVIC_EnableIRQ>:
+  \details Enables a device specific interrupt in the NVIC interrupt controller.
+  \param [in]      IRQn  Device specific interrupt number.
+  \note    IRQn must not be negative.
  */
-#include "stm32f103xb.h"
+__STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
+{
+ 8000504:	b480      	push	{r7}
+ 8000506:	b083      	sub	sp, #12
+ 8000508:	af00      	add	r7, sp, #0
+ 800050a:	4603      	mov	r3, r0
+ 800050c:	71fb      	strb	r3, [r7, #7]
+  if ((int32_t)(IRQn) >= 0)
+ 800050e:	f997 3007 	ldrsb.w	r3, [r7, #7]
+ 8000512:	2b00      	cmp	r3, #0
+ 8000514:	db0b      	blt.n	800052e <__NVIC_EnableIRQ+0x2a>
+  {
+    NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+ 8000516:	79fb      	ldrb	r3, [r7, #7]
+ 8000518:	f003 021f 	and.w	r2, r3, #31
+ 800051c:	4906      	ldr	r1, [pc, #24]	; (8000538 <__NVIC_EnableIRQ+0x34>)
+ 800051e:	f997 3007 	ldrsb.w	r3, [r7, #7]
+ 8000522:	095b      	lsrs	r3, r3, #5
+ 8000524:	2001      	movs	r0, #1
+ 8000526:	fa00 f202 	lsl.w	r2, r0, r2
+ 800052a:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+  }
+}
+ 800052e:	bf00      	nop
+ 8000530:	370c      	adds	r7, #12
+ 8000532:	46bd      	mov	sp, r7
+ 8000534:	bc80      	pop	{r7}
+ 8000536:	4770      	bx	lr
+ 8000538:	e000e100 	.word	0xe000e100
+
+0800053c <RCC_init>:
+#include "stm32f1xx.h"
+
+#define F_CPU 		72000000UL	// Тактовая у нас 72МГЦ
+#define TimerTick  	F_CPU/1000-1	// Нам нужен килогерц
 
 void RCC_init(){
- 8000470:	b480      	push	{r7}
- 8000472:	af00      	add	r7, sp, #0
+ 800053c:	b480      	push	{r7}
+ 800053e:	af00      	add	r7, sp, #0
 
-	/*Задаётся тактирование HCLK = 36MHz*/
-    RCC->CR |= ((uint32_t) RCC_CR_HSEON);	//Включение кварца
- 8000474:	4b31      	ldr	r3, [pc, #196]	; (800053c <RCC_init+0xcc>)
- 8000476:	681b      	ldr	r3, [r3, #0]
- 8000478:	4a30      	ldr	r2, [pc, #192]	; (800053c <RCC_init+0xcc>)
- 800047a:	f443 3380 	orr.w	r3, r3, #65536	; 0x10000
- 800047e:	6013      	str	r3, [r2, #0]
+    /*Задаётся тактирование HCLK = 72MHz*/
+
+    RCC->CR |= RCC_CR_HSEON;			//Включение кварца HSE 8MHz
+ 8000540:	4b3f      	ldr	r3, [pc, #252]	; (8000640 <RCC_init+0x104>)
+ 8000542:	681b      	ldr	r3, [r3, #0]
+ 8000544:	4a3e      	ldr	r2, [pc, #248]	; (8000640 <RCC_init+0x104>)
+ 8000546:	f443 3380 	orr.w	r3, r3, #65536	; 0x10000
+ 800054a:	6013      	str	r3, [r2, #0]
     while (!(RCC->CR & RCC_CR_HSERDY));		//Жду включение кварца.тактирования
- 8000480:	bf00      	nop
- 8000482:	4b2e      	ldr	r3, [pc, #184]	; (800053c <RCC_init+0xcc>)
- 8000484:	681b      	ldr	r3, [r3, #0]
- 8000486:	f403 3300 	and.w	r3, r3, #131072	; 0x20000
- 800048a:	2b00      	cmp	r3, #0
- 800048c:	d0f9      	beq.n	8000482 <RCC_init+0x12>
+ 800054c:	bf00      	nop
+ 800054e:	4b3c      	ldr	r3, [pc, #240]	; (8000640 <RCC_init+0x104>)
+ 8000550:	681b      	ldr	r3, [r3, #0]
+ 8000552:	f403 3300 	and.w	r3, r3, #131072	; 0x20000
+ 8000556:	2b00      	cmp	r3, #0
+ 8000558:	d0f9      	beq.n	800054e <RCC_init+0x12>
+//    RCC->CR |= RCC_CR_HSION;			//Включение кварца HSI 8MHz
+//    while (!(RCC->CR & RCC_CR_HSIRDY));		//Жду включение кварца.тактирования
 
-    RCC->CFGR |= RCC_CFGR_HPRE_DIV1;		//Задаю тактирование общей шины AHB 48 - 72MHz...
- 800048e:	4b2b      	ldr	r3, [pc, #172]	; (800053c <RCC_init+0xcc>)
- 8000490:	4a2a      	ldr	r2, [pc, #168]	; (800053c <RCC_init+0xcc>)
- 8000492:	685b      	ldr	r3, [r3, #4]
- 8000494:	6053      	str	r3, [r2, #4]
-    RCC->CFGR |= RCC_CFGR_PPRE1_DIV1;		//Тактирование шины APB1..
- 8000496:	4b29      	ldr	r3, [pc, #164]	; (800053c <RCC_init+0xcc>)
- 8000498:	4a28      	ldr	r2, [pc, #160]	; (800053c <RCC_init+0xcc>)
- 800049a:	685b      	ldr	r3, [r3, #4]
- 800049c:	6053      	str	r3, [r2, #4]
-    RCC->CFGR |= RCC_CFGR_PPRE2_DIV2;		//Тактирование шины APB2.
- 800049e:	4b27      	ldr	r3, [pc, #156]	; (800053c <RCC_init+0xcc>)
- 80004a0:	685b      	ldr	r3, [r3, #4]
- 80004a2:	4a26      	ldr	r2, [pc, #152]	; (800053c <RCC_init+0xcc>)
- 80004a4:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
- 80004a8:	6053      	str	r3, [r2, #4]
+//    RCC->CR |= RCC_CR_CSSON;
 
-    RCC->CFGR &= ~RCC_CFGR_PLLMULL;			//Множители и делители приравниваю к 0
- 80004aa:	4b24      	ldr	r3, [pc, #144]	; (800053c <RCC_init+0xcc>)
- 80004ac:	685b      	ldr	r3, [r3, #4]
- 80004ae:	4a23      	ldr	r2, [pc, #140]	; (800053c <RCC_init+0xcc>)
- 80004b0:	f423 1370 	bic.w	r3, r3, #3932160	; 0x3c0000
- 80004b4:	6053      	str	r3, [r2, #4]
+    FLASH->ACR |= FLASH_ACR_PRFTBE;
+ 800055a:	4b3a      	ldr	r3, [pc, #232]	; (8000644 <RCC_init+0x108>)
+ 800055c:	681b      	ldr	r3, [r3, #0]
+ 800055e:	4a39      	ldr	r2, [pc, #228]	; (8000644 <RCC_init+0x108>)
+ 8000560:	f043 0310 	orr.w	r3, r3, #16
+ 8000564:	6013      	str	r3, [r2, #0]
+
+    /* Flash 2 wait state */
+    FLASH->ACR &= (uint32_t)((uint32_t)~FLASH_ACR_LATENCY);
+ 8000566:	4b37      	ldr	r3, [pc, #220]	; (8000644 <RCC_init+0x108>)
+ 8000568:	681b      	ldr	r3, [r3, #0]
+ 800056a:	4a36      	ldr	r2, [pc, #216]	; (8000644 <RCC_init+0x108>)
+ 800056c:	f023 0307 	bic.w	r3, r3, #7
+ 8000570:	6013      	str	r3, [r2, #0]
+    FLASH->ACR |= (uint32_t)FLASH_ACR_LATENCY_2;
+ 8000572:	4b34      	ldr	r3, [pc, #208]	; (8000644 <RCC_init+0x108>)
+ 8000574:	681b      	ldr	r3, [r3, #0]
+ 8000576:	4a33      	ldr	r2, [pc, #204]	; (8000644 <RCC_init+0x108>)
+ 8000578:	f043 0304 	orr.w	r3, r3, #4
+ 800057c:	6013      	str	r3, [r2, #0]
+
+    RCC->CFGR |= RCC_CFGR_HPRE_DIV1;		//Задал делитель для шины AHB ->/1 => 72/1 = 72MHZ MAX!!
+ 800057e:	4b30      	ldr	r3, [pc, #192]	; (8000640 <RCC_init+0x104>)
+ 8000580:	4a2f      	ldr	r2, [pc, #188]	; (8000640 <RCC_init+0x104>)
+ 8000582:	685b      	ldr	r3, [r3, #4]
+ 8000584:	6053      	str	r3, [r2, #4]
+    RCC->CFGR |= RCC_CFGR_PPRE1_DIV2;		//Задал делитель для шины APB1 ->/2 => 72/2 = 36MHZ MAX!!
+ 8000586:	4b2e      	ldr	r3, [pc, #184]	; (8000640 <RCC_init+0x104>)
+ 8000588:	685b      	ldr	r3, [r3, #4]
+ 800058a:	4a2d      	ldr	r2, [pc, #180]	; (8000640 <RCC_init+0x104>)
+ 800058c:	f443 6380 	orr.w	r3, r3, #1024	; 0x400
+ 8000590:	6053      	str	r3, [r2, #4]
+    RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;		//Задал делитель для шины APB2 ->/1 => 72/1 = 72MHZ MAX!!
+ 8000592:	4b2b      	ldr	r3, [pc, #172]	; (8000640 <RCC_init+0x104>)
+ 8000594:	4a2a      	ldr	r2, [pc, #168]	; (8000640 <RCC_init+0x104>)
+ 8000596:	685b      	ldr	r3, [r3, #4]
+ 8000598:	6053      	str	r3, [r2, #4]
+
     RCC->CFGR &= ~RCC_CFGR_PLLSRC;			//Делитель для тактирования (после PLL Source mux)
- 80004b6:	4b21      	ldr	r3, [pc, #132]	; (800053c <RCC_init+0xcc>)
- 80004b8:	685b      	ldr	r3, [r3, #4]
- 80004ba:	4a20      	ldr	r2, [pc, #128]	; (800053c <RCC_init+0xcc>)
- 80004bc:	f423 3380 	bic.w	r3, r3, #65536	; 0x10000
- 80004c0:	6053      	str	r3, [r2, #4]
+ 800059a:	4b29      	ldr	r3, [pc, #164]	; (8000640 <RCC_init+0x104>)
+ 800059c:	685b      	ldr	r3, [r3, #4]
+ 800059e:	4a28      	ldr	r2, [pc, #160]	; (8000640 <RCC_init+0x104>)
+ 80005a0:	f423 3380 	bic.w	r3, r3, #65536	; 0x10000
+ 80005a4:	6053      	str	r3, [r2, #4]
     RCC->CFGR &= ~RCC_CFGR_PLLXTPRE;		//Делитель для тактирования HSE (После "HSE") => 1
- 80004c2:	4b1e      	ldr	r3, [pc, #120]	; (800053c <RCC_init+0xcc>)
- 80004c4:	685b      	ldr	r3, [r3, #4]
- 80004c6:	4a1d      	ldr	r2, [pc, #116]	; (800053c <RCC_init+0xcc>)
- 80004c8:	f423 3300 	bic.w	r3, r3, #131072	; 0x20000
- 80004cc:	6053      	str	r3, [r2, #4]
+ 80005a6:	4b26      	ldr	r3, [pc, #152]	; (8000640 <RCC_init+0x104>)
+ 80005a8:	685b      	ldr	r3, [r3, #4]
+ 80005aa:	4a25      	ldr	r2, [pc, #148]	; (8000640 <RCC_init+0x104>)
+ 80005ac:	f423 3300 	bic.w	r3, r3, #131072	; 0x20000
+ 80005b0:	6053      	str	r3, [r2, #4]
+    RCC->CFGR &= ~RCC_CFGR_PLLMULL;			//Множители и делители приравниваю к 0
+ 80005b2:	4b23      	ldr	r3, [pc, #140]	; (8000640 <RCC_init+0x104>)
+ 80005b4:	685b      	ldr	r3, [r3, #4]
+ 80005b6:	4a22      	ldr	r2, [pc, #136]	; (8000640 <RCC_init+0x104>)
+ 80005b8:	f423 1370 	bic.w	r3, r3, #3932160	; 0x3c0000
+ 80005bc:	6053      	str	r3, [r2, #4]
 
-    RCC->CFGR |= RCC_CFGR_PLLSRC;			//PLL Source MUX
- 80004ce:	4b1b      	ldr	r3, [pc, #108]	; (800053c <RCC_init+0xcc>)
- 80004d0:	685b      	ldr	r3, [r3, #4]
- 80004d2:	4a1a      	ldr	r2, [pc, #104]	; (800053c <RCC_init+0xcc>)
- 80004d4:	f443 3380 	orr.w	r3, r3, #65536	; 0x10000
- 80004d8:	6053      	str	r3, [r2, #4]
-    RCC->CFGR |= RCC_CFGR_PLLXTPRE;			//Делитель для тактирования HSE/2
- 80004da:	4b18      	ldr	r3, [pc, #96]	; (800053c <RCC_init+0xcc>)
- 80004dc:	685b      	ldr	r3, [r3, #4]
- 80004de:	4a17      	ldr	r2, [pc, #92]	; (800053c <RCC_init+0xcc>)
- 80004e0:	f443 3300 	orr.w	r3, r3, #131072	; 0x20000
- 80004e4:	6053      	str	r3, [r2, #4]
-    RCC->CFGR |= RCC_CFGR_PLLMULL9;			//Множитель PLL = 9
- 80004e6:	4b15      	ldr	r3, [pc, #84]	; (800053c <RCC_init+0xcc>)
- 80004e8:	685b      	ldr	r3, [r3, #4]
- 80004ea:	4a14      	ldr	r2, [pc, #80]	; (800053c <RCC_init+0xcc>)
- 80004ec:	f443 13e0 	orr.w	r3, r3, #1835008	; 0x1c0000
- 80004f0:	6053      	str	r3, [r2, #4]
+    RCC->CFGR |= RCC_CFGR_PLLSRC;			//делитель перед PLL Source MUX HSE генератора
+ 80005be:	4b20      	ldr	r3, [pc, #128]	; (8000640 <RCC_init+0x104>)
+ 80005c0:	685b      	ldr	r3, [r3, #4]
+ 80005c2:	4a1f      	ldr	r2, [pc, #124]	; (8000640 <RCC_init+0x104>)
+ 80005c4:	f443 3380 	orr.w	r3, r3, #65536	; 0x10000
+ 80005c8:	6053      	str	r3, [r2, #4]
+    RCC->CFGR |= RCC_CFGR_PLLXTPRE_HSE;		//Делитель для тактирования HSE/2 перед PLL S_MUX ToDO Проверить т.к он уже отключён
+ 80005ca:	4b1d      	ldr	r3, [pc, #116]	; (8000640 <RCC_init+0x104>)
+ 80005cc:	4a1c      	ldr	r2, [pc, #112]	; (8000640 <RCC_init+0x104>)
+ 80005ce:	685b      	ldr	r3, [r3, #4]
+ 80005d0:	6053      	str	r3, [r2, #4]
+    RCC->CFGR |= RCC_CFGR_PLLMULL9;		//Множитель PLL = 9
+ 80005d2:	4b1b      	ldr	r3, [pc, #108]	; (8000640 <RCC_init+0x104>)
+ 80005d4:	685b      	ldr	r3, [r3, #4]
+ 80005d6:	4a1a      	ldr	r2, [pc, #104]	; (8000640 <RCC_init+0x104>)
+ 80005d8:	f443 13e0 	orr.w	r3, r3, #1835008	; 0x1c0000
+ 80005dc:	6053      	str	r3, [r2, #4]
 
-    RCC->CR |= RCC_CR_PLLON;				//Включение Множителя PLL
- 80004f2:	4b12      	ldr	r3, [pc, #72]	; (800053c <RCC_init+0xcc>)
- 80004f4:	681b      	ldr	r3, [r3, #0]
- 80004f6:	4a11      	ldr	r2, [pc, #68]	; (800053c <RCC_init+0xcc>)
- 80004f8:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
- 80004fc:	6013      	str	r3, [r2, #0]
+    //ADC
+    RCC->CFGR &= ~RCC_CFGR_ADCPRE;		//Обнулить значение делителя для АЦП /2
+ 80005de:	4b18      	ldr	r3, [pc, #96]	; (8000640 <RCC_init+0x104>)
+ 80005e0:	685b      	ldr	r3, [r3, #4]
+ 80005e2:	4a17      	ldr	r2, [pc, #92]	; (8000640 <RCC_init+0x104>)
+ 80005e4:	f423 4340 	bic.w	r3, r3, #49152	; 0xc000
+ 80005e8:	6053      	str	r3, [r2, #4]
+    RCC->CFGR |= RCC_CFGR_ADCPRE_DIV6;		//Задаю делитель для ацп = |1|0| = /6 => 72/6MHz = 12MHz < 18MHz(MAX)
+ 80005ea:	4b15      	ldr	r3, [pc, #84]	; (8000640 <RCC_init+0x104>)
+ 80005ec:	685b      	ldr	r3, [r3, #4]
+ 80005ee:	4a14      	ldr	r2, [pc, #80]	; (8000640 <RCC_init+0x104>)
+ 80005f0:	f443 4300 	orr.w	r3, r3, #32768	; 0x8000
+ 80005f4:	6053      	str	r3, [r2, #4]
+
+    RCC->CR |= RCC_CR_PLLON;			//Включение Множителя PLL
+ 80005f6:	4b12      	ldr	r3, [pc, #72]	; (8000640 <RCC_init+0x104>)
+ 80005f8:	681b      	ldr	r3, [r3, #0]
+ 80005fa:	4a11      	ldr	r2, [pc, #68]	; (8000640 <RCC_init+0x104>)
+ 80005fc:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
+ 8000600:	6013      	str	r3, [r2, #0]
     while((RCC->CR & RCC_CR_PLLRDY) == 0);
- 80004fe:	bf00      	nop
- 8000500:	4b0e      	ldr	r3, [pc, #56]	; (800053c <RCC_init+0xcc>)
- 8000502:	681b      	ldr	r3, [r3, #0]
- 8000504:	f003 7300 	and.w	r3, r3, #33554432	; 0x2000000
- 8000508:	2b00      	cmp	r3, #0
- 800050a:	d0f9      	beq.n	8000500 <RCC_init+0x90>
+ 8000602:	bf00      	nop
+ 8000604:	4b0e      	ldr	r3, [pc, #56]	; (8000640 <RCC_init+0x104>)
+ 8000606:	681b      	ldr	r3, [r3, #0]
+ 8000608:	f003 7300 	and.w	r3, r3, #33554432	; 0x2000000
+ 800060c:	2b00      	cmp	r3, #0
+ 800060e:	d0f9      	beq.n	8000604 <RCC_init+0xc8>
 
-    RCC->CFGR &= ~RCC_CFGR_SW;				//System clock mux
- 800050c:	4b0b      	ldr	r3, [pc, #44]	; (800053c <RCC_init+0xcc>)
- 800050e:	685b      	ldr	r3, [r3, #4]
- 8000510:	4a0a      	ldr	r2, [pc, #40]	; (800053c <RCC_init+0xcc>)
- 8000512:	f023 0303 	bic.w	r3, r3, #3
- 8000516:	6053      	str	r3, [r2, #4]
-    RCC->CFGR |= RCC_CFGR_SW_1;
- 8000518:	4b08      	ldr	r3, [pc, #32]	; (800053c <RCC_init+0xcc>)
- 800051a:	685b      	ldr	r3, [r3, #4]
- 800051c:	4a07      	ldr	r2, [pc, #28]	; (800053c <RCC_init+0xcc>)
- 800051e:	f043 0302 	orr.w	r3, r3, #2
- 8000522:	6053      	str	r3, [r2, #4]
-    while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_1);	//Жду пока включится
- 8000524:	bf00      	nop
- 8000526:	4b05      	ldr	r3, [pc, #20]	; (800053c <RCC_init+0xcc>)
- 8000528:	685b      	ldr	r3, [r3, #4]
- 800052a:	f003 030c 	and.w	r3, r3, #12
- 800052e:	2b08      	cmp	r3, #8
- 8000530:	d1f9      	bne.n	8000526 <RCC_init+0xb6>
+    RCC->CFGR &= ~RCC_CFGR_SW;					//System clock mux
+ 8000610:	4b0b      	ldr	r3, [pc, #44]	; (8000640 <RCC_init+0x104>)
+ 8000612:	685b      	ldr	r3, [r3, #4]
+ 8000614:	4a0a      	ldr	r2, [pc, #40]	; (8000640 <RCC_init+0x104>)
+ 8000616:	f023 0303 	bic.w	r3, r3, #3
+ 800061a:	6053      	str	r3, [r2, #4]
+    RCC->CFGR |= RCC_CFGR_SW_PLL;				//RCC_CFGR_SW_1;
+ 800061c:	4b08      	ldr	r3, [pc, #32]	; (8000640 <RCC_init+0x104>)
+ 800061e:	685b      	ldr	r3, [r3, #4]
+ 8000620:	4a07      	ldr	r2, [pc, #28]	; (8000640 <RCC_init+0x104>)
+ 8000622:	f043 0302 	orr.w	r3, r3, #2
+ 8000626:	6053      	str	r3, [r2, #4]
+    while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);	//Жду пока включится
+ 8000628:	bf00      	nop
+ 800062a:	4b05      	ldr	r3, [pc, #20]	; (8000640 <RCC_init+0x104>)
+ 800062c:	685b      	ldr	r3, [r3, #4]
+ 800062e:	f003 030c 	and.w	r3, r3, #12
+ 8000632:	2b08      	cmp	r3, #8
+ 8000634:	d1f9      	bne.n	800062a <RCC_init+0xee>
 }
- 8000532:	bf00      	nop
- 8000534:	bf00      	nop
- 8000536:	46bd      	mov	sp, r7
- 8000538:	bc80      	pop	{r7}
- 800053a:	4770      	bx	lr
- 800053c:	40021000 	.word	0x40021000
+ 8000636:	bf00      	nop
+ 8000638:	bf00      	nop
+ 800063a:	46bd      	mov	sp, r7
+ 800063c:	bc80      	pop	{r7}
+ 800063e:	4770      	bx	lr
+ 8000640:	40021000 	.word	0x40021000
+ 8000644:	40022000 	.word	0x40022000
 
-08000540 <Sys_clock>:
+08000648 <Sys_clock>:
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;		//Включение тактирование шины APB2, где есть вывод MCO
     GPIOA->CRH &= ~GPIO_CRH_CNF8_0;
-
     RCC->CFGR |= RCC_CFGR_MCO_SYSCLK;
 }
 
 void Sys_clock(){
- 8000540:	b480      	push	{r7}
- 8000542:	af00      	add	r7, sp, #0
+ 8000648:	b480      	push	{r7}
+ 800064a:	af00      	add	r7, sp, #0
 
+    SysTick->LOAD &= ~SysTick_LOAD_RELOAD_Msk;
+ 800064c:	4b16      	ldr	r3, [pc, #88]	; (80006a8 <Sys_clock+0x60>)
+ 800064e:	685b      	ldr	r3, [r3, #4]
+ 8000650:	4a15      	ldr	r2, [pc, #84]	; (80006a8 <Sys_clock+0x60>)
+ 8000652:	f003 437f 	and.w	r3, r3, #4278190080	; 0xff000000
+ 8000656:	6053      	str	r3, [r2, #4]
+    SysTick->VAL &= ~SysTick_VAL_CURRENT_Msk;
+ 8000658:	4b13      	ldr	r3, [pc, #76]	; (80006a8 <Sys_clock+0x60>)
+ 800065a:	689b      	ldr	r3, [r3, #8]
+ 800065c:	4a12      	ldr	r2, [pc, #72]	; (80006a8 <Sys_clock+0x60>)
+ 800065e:	f003 437f 	and.w	r3, r3, #4278190080	; 0xff000000
+ 8000662:	6093      	str	r3, [r2, #8]
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;		//Выкл. выключенного счётчика
- 8000544:	4b11      	ldr	r3, [pc, #68]	; (800058c <Sys_clock+0x4c>)
- 8000546:	681b      	ldr	r3, [r3, #0]
- 8000548:	4a10      	ldr	r2, [pc, #64]	; (800058c <Sys_clock+0x4c>)
- 800054a:	f023 0301 	bic.w	r3, r3, #1
- 800054e:	6013      	str	r3, [r2, #0]
+ 8000664:	4b10      	ldr	r3, [pc, #64]	; (80006a8 <Sys_clock+0x60>)
+ 8000666:	681b      	ldr	r3, [r3, #0]
+ 8000668:	4a0f      	ldr	r2, [pc, #60]	; (80006a8 <Sys_clock+0x60>)
+ 800066a:	f023 0301 	bic.w	r3, r3, #1
+ 800066e:	6013      	str	r3, [r2, #0]
+
     SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;		//Вкл. отсчёта до нуля
- 8000550:	4b0e      	ldr	r3, [pc, #56]	; (800058c <Sys_clock+0x4c>)
- 8000552:	681b      	ldr	r3, [r3, #0]
- 8000554:	4a0d      	ldr	r2, [pc, #52]	; (800058c <Sys_clock+0x4c>)
- 8000556:	f043 0302 	orr.w	r3, r3, #2
- 800055a:	6013      	str	r3, [r2, #0]
+ 8000670:	4b0d      	ldr	r3, [pc, #52]	; (80006a8 <Sys_clock+0x60>)
+ 8000672:	681b      	ldr	r3, [r3, #0]
+ 8000674:	4a0c      	ldr	r2, [pc, #48]	; (80006a8 <Sys_clock+0x60>)
+ 8000676:	f043 0302 	orr.w	r3, r3, #2
+ 800067a:	6013      	str	r3, [r2, #0]
     SysTick->CTRL |= SysTick_CTRL_CLKSOURCE_Msk;	//Источник синхронизации без делителя 24MHz
- 800055c:	4b0b      	ldr	r3, [pc, #44]	; (800058c <Sys_clock+0x4c>)
- 800055e:	681b      	ldr	r3, [r3, #0]
- 8000560:	4a0a      	ldr	r2, [pc, #40]	; (800058c <Sys_clock+0x4c>)
- 8000562:	f043 0304 	orr.w	r3, r3, #4
- 8000566:	6013      	str	r3, [r2, #0]
+ 800067c:	4b0a      	ldr	r3, [pc, #40]	; (80006a8 <Sys_clock+0x60>)
+ 800067e:	681b      	ldr	r3, [r3, #0]
+ 8000680:	4a09      	ldr	r2, [pc, #36]	; (80006a8 <Sys_clock+0x60>)
+ 8000682:	f043 0304 	orr.w	r3, r3, #4
+ 8000686:	6013      	str	r3, [r2, #0]
 
-    SysTick->LOAD = 35999;							//Задаю значение с которого будет отсчёт счётчика
- 8000568:	4b08      	ldr	r3, [pc, #32]	; (800058c <Sys_clock+0x4c>)
- 800056a:	f648 429f 	movw	r2, #35999	; 0x8c9f
- 800056e:	605a      	str	r2, [r3, #4]
+    SysTick->LOAD = TimerTick;				//Задаю значение с которого будет отсчёт счётчика
+ 8000688:	4b07      	ldr	r3, [pc, #28]	; (80006a8 <Sys_clock+0x60>)
+ 800068a:	4a08      	ldr	r2, [pc, #32]	; (80006ac <Sys_clock+0x64>)
+ 800068c:	605a      	str	r2, [r3, #4]
 
-    SysTick->VAL = 35999;							//Задаю текущее значение счётчика
- 8000570:	4b06      	ldr	r3, [pc, #24]	; (800058c <Sys_clock+0x4c>)
- 8000572:	f648 429f 	movw	r2, #35999	; 0x8c9f
- 8000576:	609a      	str	r2, [r3, #8]
+    SysTick->VAL = TimerTick;				//Задаю текущее значение счётчика
+ 800068e:	4b06      	ldr	r3, [pc, #24]	; (80006a8 <Sys_clock+0x60>)
+ 8000690:	4a06      	ldr	r2, [pc, #24]	; (80006ac <Sys_clock+0x64>)
+ 8000692:	609a      	str	r2, [r3, #8]
 
     SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;		//Вкл. счётчик
- 8000578:	4b04      	ldr	r3, [pc, #16]	; (800058c <Sys_clock+0x4c>)
- 800057a:	681b      	ldr	r3, [r3, #0]
- 800057c:	4a03      	ldr	r2, [pc, #12]	; (800058c <Sys_clock+0x4c>)
- 800057e:	f043 0301 	orr.w	r3, r3, #1
- 8000582:	6013      	str	r3, [r2, #0]
+ 8000694:	4b04      	ldr	r3, [pc, #16]	; (80006a8 <Sys_clock+0x60>)
+ 8000696:	681b      	ldr	r3, [r3, #0]
+ 8000698:	4a03      	ldr	r2, [pc, #12]	; (80006a8 <Sys_clock+0x60>)
+ 800069a:	f043 0301 	orr.w	r3, r3, #1
+ 800069e:	6013      	str	r3, [r2, #0]
 }
- 8000584:	bf00      	nop
- 8000586:	46bd      	mov	sp, r7
- 8000588:	bc80      	pop	{r7}
- 800058a:	4770      	bx	lr
- 800058c:	e000e010 	.word	0xe000e010
+ 80006a0:	bf00      	nop
+ 80006a2:	46bd      	mov	sp, r7
+ 80006a4:	bc80      	pop	{r7}
+ 80006a6:	4770      	bx	lr
+ 80006a8:	e000e010 	.word	0xe000e010
+ 80006ac:	0001193f 	.word	0x0001193f
 
-08000590 <main>:
-//void MCO(void);
-//void SPI_init(void);
+080006b0 <TIMx_init>:
+
+void TIMx_init(void){
+ 80006b0:	b580      	push	{r7, lr}
+ 80006b2:	af00      	add	r7, sp, #0
+
+    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;	//Вкл. тактирования таймера
+ 80006b4:	4b38      	ldr	r3, [pc, #224]	; (8000798 <TIMx_init+0xe8>)
+ 80006b6:	69db      	ldr	r3, [r3, #28]
+ 80006b8:	4a37      	ldr	r2, [pc, #220]	; (8000798 <TIMx_init+0xe8>)
+ 80006ba:	f043 0302 	orr.w	r3, r3, #2
+ 80006be:	61d3      	str	r3, [r2, #28]
+    /*TIM2 APB1 (MAX 36MHz)
+     *GPIO
+     *PB1 -> TIM3_CH4 Output compare channel <-> Alternative function push pull*/
+    //PB1
+    GPIOB->CRL &= ~GPIO_CRL_CNF1;	//Обязательная очистка регистра!!!
+ 80006c0:	4b36      	ldr	r3, [pc, #216]	; (800079c <TIMx_init+0xec>)
+ 80006c2:	681b      	ldr	r3, [r3, #0]
+ 80006c4:	4a35      	ldr	r2, [pc, #212]	; (800079c <TIMx_init+0xec>)
+ 80006c6:	f023 03c0 	bic.w	r3, r3, #192	; 0xc0
+ 80006ca:	6013      	str	r3, [r2, #0]
+    GPIOB->CRL |= GPIO_CRL_CNF1_1;	//|1|0| - Alternative function push pull
+ 80006cc:	4b33      	ldr	r3, [pc, #204]	; (800079c <TIMx_init+0xec>)
+ 80006ce:	681b      	ldr	r3, [r3, #0]
+ 80006d0:	4a32      	ldr	r2, [pc, #200]	; (800079c <TIMx_init+0xec>)
+ 80006d2:	f043 0380 	orr.w	r3, r3, #128	; 0x80
+ 80006d6:	6013      	str	r3, [r2, #0]
+    GPIOB->CRL |= GPIO_CRL_MODE1;	//|1|1| - Mode MAX 10MHz toDo поменять на 50 МГц
+ 80006d8:	4b30      	ldr	r3, [pc, #192]	; (800079c <TIMx_init+0xec>)
+ 80006da:	681b      	ldr	r3, [r3, #0]
+ 80006dc:	4a2f      	ldr	r2, [pc, #188]	; (800079c <TIMx_init+0xec>)
+ 80006de:	f043 0330 	orr.w	r3, r3, #48	; 0x30
+ 80006e2:	6013      	str	r3, [r2, #0]
+
+    //TIM3
+    TIM3->CR1 &= ~TIM_CR1_OPM;		//Счётчик NE остановится когда произойдёт событие
+ 80006e4:	4b2e      	ldr	r3, [pc, #184]	; (80007a0 <TIMx_init+0xf0>)
+ 80006e6:	681b      	ldr	r3, [r3, #0]
+ 80006e8:	4a2d      	ldr	r2, [pc, #180]	; (80007a0 <TIMx_init+0xf0>)
+ 80006ea:	f023 0308 	bic.w	r3, r3, #8
+ 80006ee:	6013      	str	r3, [r2, #0]
+    TIM3->CR1 &= ~TIM_CR1_DIR;		//Счётчик считает вверх
+ 80006f0:	4b2b      	ldr	r3, [pc, #172]	; (80007a0 <TIMx_init+0xf0>)
+ 80006f2:	681b      	ldr	r3, [r3, #0]
+ 80006f4:	4a2a      	ldr	r2, [pc, #168]	; (80007a0 <TIMx_init+0xf0>)
+ 80006f6:	f023 0310 	bic.w	r3, r3, #16
+ 80006fa:	6013      	str	r3, [r2, #0]
+    TIM3->CR1 &= ~TIM_CR1_CMS;		//Выравнивание работает как задан DIR.
+ 80006fc:	4b28      	ldr	r3, [pc, #160]	; (80007a0 <TIMx_init+0xf0>)
+ 80006fe:	681b      	ldr	r3, [r3, #0]
+ 8000700:	4a27      	ldr	r2, [pc, #156]	; (80007a0 <TIMx_init+0xf0>)
+ 8000702:	f023 0360 	bic.w	r3, r3, #96	; 0x60
+ 8000706:	6013      	str	r3, [r2, #0]
+    TIM3->CR1 |= TIM_CR1_ARPE;		//Автоперегрузка таймера
+ 8000708:	4b25      	ldr	r3, [pc, #148]	; (80007a0 <TIMx_init+0xf0>)
+ 800070a:	681b      	ldr	r3, [r3, #0]
+ 800070c:	4a24      	ldr	r2, [pc, #144]	; (80007a0 <TIMx_init+0xf0>)
+ 800070e:	f043 0380 	orr.w	r3, r3, #128	; 0x80
+ 8000712:	6013      	str	r3, [r2, #0]
+    TIM3->CR1 &= ~TIM_CR1_CKD;		//Множитель для счётчика х1
+ 8000714:	4b22      	ldr	r3, [pc, #136]	; (80007a0 <TIMx_init+0xf0>)
+ 8000716:	681b      	ldr	r3, [r3, #0]
+ 8000718:	4a21      	ldr	r2, [pc, #132]	; (80007a0 <TIMx_init+0xf0>)
+ 800071a:	f423 7340 	bic.w	r3, r3, #768	; 0x300
+ 800071e:	6013      	str	r3, [r2, #0]
+
+    //TIM3->DIER |= TIM_DIER_UIE;		//Вкл. IRQ было
+    TIM3->DIER |= TIM_DIER_CC4DE;		//Вкл. IRQ стало
+ 8000720:	4b1f      	ldr	r3, [pc, #124]	; (80007a0 <TIMx_init+0xf0>)
+ 8000722:	68db      	ldr	r3, [r3, #12]
+ 8000724:	4a1e      	ldr	r2, [pc, #120]	; (80007a0 <TIMx_init+0xf0>)
+ 8000726:	f443 5380 	orr.w	r3, r3, #4096	; 0x1000
+ 800072a:	60d3      	str	r3, [r2, #12]
+
+    TIM3->PSC = 1;//2;//719-1;
+ 800072c:	4b1c      	ldr	r3, [pc, #112]	; (80007a0 <TIMx_init+0xf0>)
+ 800072e:	2201      	movs	r2, #1
+ 8000730:	629a      	str	r2, [r3, #40]	; 0x28
+    TIM3->ARR = 35999;//999;//999;//50000-1;//;
+ 8000732:	4b1b      	ldr	r3, [pc, #108]	; (80007a0 <TIMx_init+0xf0>)
+ 8000734:	f648 429f 	movw	r2, #35999	; 0x8c9f
+ 8000738:	62da      	str	r2, [r3, #44]	; 0x2c
+
+    NVIC_EnableIRQ(TIM3_IRQn);
+ 800073a:	201d      	movs	r0, #29
+ 800073c:	f7ff fee2 	bl	8000504 <__NVIC_EnableIRQ>
+    TIM3->CR1 |= TIM_CR1_CEN;		//Включения счётчика
+ 8000740:	4b17      	ldr	r3, [pc, #92]	; (80007a0 <TIMx_init+0xf0>)
+ 8000742:	681b      	ldr	r3, [r3, #0]
+ 8000744:	4a16      	ldr	r2, [pc, #88]	; (80007a0 <TIMx_init+0xf0>)
+ 8000746:	f043 0301 	orr.w	r3, r3, #1
+ 800074a:	6013      	str	r3, [r2, #0]
+
+    //PWM Output for PB1 - > PWM
+    TIM3->CCMR2 &= ~TIM_CCMR2_CC4S;	//Включаю для 4ого канала вывод ШИМ. Режим захвата и сравнения
+ 800074c:	4b14      	ldr	r3, [pc, #80]	; (80007a0 <TIMx_init+0xf0>)
+ 800074e:	69db      	ldr	r3, [r3, #28]
+ 8000750:	4a13      	ldr	r2, [pc, #76]	; (80007a0 <TIMx_init+0xf0>)
+ 8000752:	f423 7340 	bic.w	r3, r3, #768	; 0x300
+ 8000756:	61d3      	str	r3, [r2, #28]
+    TIM3->CCMR2 &= ~TIM_CCMR2_OC4FE;	//Включаю для 4ого канала вывод ШИМ. Режим захвата и сравнения
+ 8000758:	4b11      	ldr	r3, [pc, #68]	; (80007a0 <TIMx_init+0xf0>)
+ 800075a:	69db      	ldr	r3, [r3, #28]
+ 800075c:	4a10      	ldr	r2, [pc, #64]	; (80007a0 <TIMx_init+0xf0>)
+ 800075e:	f423 6380 	bic.w	r3, r3, #1024	; 0x400
+ 8000762:	61d3      	str	r3, [r2, #28]
+    TIM3->CCMR2 |= TIM_CCMR2_OC4PE;	//Режим переодичности ШИМа
+ 8000764:	4b0e      	ldr	r3, [pc, #56]	; (80007a0 <TIMx_init+0xf0>)
+ 8000766:	69db      	ldr	r3, [r3, #28]
+ 8000768:	4a0d      	ldr	r2, [pc, #52]	; (80007a0 <TIMx_init+0xf0>)
+ 800076a:	f443 6300 	orr.w	r3, r3, #2048	; 0x800
+ 800076e:	61d3      	str	r3, [r2, #28]
+    TIM3->CCMR2 |= 6UL << TIM_CCMR2_OC4M_Pos;//(TIM_CCMR2_OC4M_2 | TIM_CCMR2_OC4M_1);	//Режим 110
+ 8000770:	4b0b      	ldr	r3, [pc, #44]	; (80007a0 <TIMx_init+0xf0>)
+ 8000772:	69db      	ldr	r3, [r3, #28]
+ 8000774:	4a0a      	ldr	r2, [pc, #40]	; (80007a0 <TIMx_init+0xf0>)
+ 8000776:	f443 43c0 	orr.w	r3, r3, #24576	; 0x6000
+ 800077a:	61d3      	str	r3, [r2, #28]
+    TIM3->CCMR2 &= ~TIM_CCMR2_OC4CE;	//
+ 800077c:	4b08      	ldr	r3, [pc, #32]	; (80007a0 <TIMx_init+0xf0>)
+ 800077e:	69db      	ldr	r3, [r3, #28]
+ 8000780:	4a07      	ldr	r2, [pc, #28]	; (80007a0 <TIMx_init+0xf0>)
+ 8000782:	f423 4300 	bic.w	r3, r3, #32768	; 0x8000
+ 8000786:	61d3      	str	r3, [r2, #28]
+
+    //PWM ON
+    TIM3->CCER |= TIM_CCER_CC4E;
+ 8000788:	4b05      	ldr	r3, [pc, #20]	; (80007a0 <TIMx_init+0xf0>)
+ 800078a:	6a1b      	ldr	r3, [r3, #32]
+ 800078c:	4a04      	ldr	r2, [pc, #16]	; (80007a0 <TIMx_init+0xf0>)
+ 800078e:	f443 5380 	orr.w	r3, r3, #4096	; 0x1000
+ 8000792:	6213      	str	r3, [r2, #32]
+    //TIM3->CCER |= TIM_CCER_CC4P;
+}
+ 8000794:	bf00      	nop
+ 8000796:	bd80      	pop	{r7, pc}
+ 8000798:	40021000 	.word	0x40021000
+ 800079c:	40010c00 	.word	0x40010c00
+ 80007a0:	40000400 	.word	0x40000400
+
+080007a4 <__NVIC_EnableIRQ>:
+{
+ 80007a4:	b480      	push	{r7}
+ 80007a6:	b083      	sub	sp, #12
+ 80007a8:	af00      	add	r7, sp, #0
+ 80007aa:	4603      	mov	r3, r0
+ 80007ac:	71fb      	strb	r3, [r7, #7]
+  if ((int32_t)(IRQn) >= 0)
+ 80007ae:	f997 3007 	ldrsb.w	r3, [r7, #7]
+ 80007b2:	2b00      	cmp	r3, #0
+ 80007b4:	db0b      	blt.n	80007ce <__NVIC_EnableIRQ+0x2a>
+    NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+ 80007b6:	79fb      	ldrb	r3, [r7, #7]
+ 80007b8:	f003 021f 	and.w	r2, r3, #31
+ 80007bc:	4906      	ldr	r1, [pc, #24]	; (80007d8 <__NVIC_EnableIRQ+0x34>)
+ 80007be:	f997 3007 	ldrsb.w	r3, [r7, #7]
+ 80007c2:	095b      	lsrs	r3, r3, #5
+ 80007c4:	2001      	movs	r0, #1
+ 80007c6:	fa00 f202 	lsl.w	r2, r0, r2
+ 80007ca:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+}
+ 80007ce:	bf00      	nop
+ 80007d0:	370c      	adds	r7, #12
+ 80007d2:	46bd      	mov	sp, r7
+ 80007d4:	bc80      	pop	{r7}
+ 80007d6:	4770      	bx	lr
+ 80007d8:	e000e100 	.word	0xe000e100
+
+080007dc <main>:
+volatile uint8_t err = 0;
+volatile uint16_t buff[DMA_BUFF_SIZE] = {0};
 
 /*********************MAIN**********************/
 
 int main(){
- 8000590:	b580      	push	{r7, lr}
- 8000592:	af00      	add	r7, sp, #0
-	Sys_clock();
- 8000594:	f7ff ffd4 	bl	8000540 <Sys_clock>
+ 80007dc:	b580      	push	{r7, lr}
+ 80007de:	af00      	add	r7, sp, #0
     RCC_init();
- 8000598:	f7ff ff6a 	bl	8000470 <RCC_init>
-    ILI_9341_init();
- 800059c:	f7ff ff18 	bl	80003d0 <ILI_9341_init>
-//    init_dma();
-//    GPIO_init();
-//    SPI_init();
-//    uint8_t	vector[2] = {0xFF, 0xC3};
+ 80007e0:	f7ff feac 	bl	800053c <RCC_init>
+    Sys_clock();
+ 80007e4:	f7ff ff30 	bl	8000648 <Sys_clock>
+    GPIO_init();
+ 80007e8:	f000 f81a 	bl	8000820 <GPIO_init>
+    TIMx_init();
+ 80007ec:	f7ff ff60 	bl	80006b0 <TIMx_init>
+    ADC_Init();
+ 80007f0:	f000 f8aa 	bl	8000948 <ADC_Init>
+    I2C_init();
+ 80007f4:	f7ff fcb0 	bl	8000158 <I2C_init>
+
+    if(LCD_1602_init() != SUCCESS){
+ 80007f8:	f7ff fe66 	bl	80004c8 <LCD_1602_init>
+ 80007fc:	4603      	mov	r3, r0
+ 80007fe:	2b00      	cmp	r3, #0
+ 8000800:	d002      	beq.n	8000808 <main+0x2c>
+    	err = 0x1;
+ 8000802:	4b05      	ldr	r3, [pc, #20]	; (8000818 <main+0x3c>)
+ 8000804:	2201      	movs	r2, #1
+ 8000806:	701a      	strb	r2, [r3, #0]
 
     while(1){
- 80005a0:	e7fe      	b.n	80005a0 <main+0x10>
-	...
+//    	if(ADC1->SR & ADC_SR_EOC){
+//    		ADC1->DR;
+//    	}
+	GPIOC->BSRR |= GPIO_BSRR_BR13;
+ 8000808:	4b04      	ldr	r3, [pc, #16]	; (800081c <main+0x40>)
+ 800080a:	691b      	ldr	r3, [r3, #16]
+ 800080c:	4a03      	ldr	r2, [pc, #12]	; (800081c <main+0x40>)
+ 800080e:	f043 5300 	orr.w	r3, r3, #536870912	; 0x20000000
+ 8000812:	6113      	str	r3, [r2, #16]
+ 8000814:	e7f8      	b.n	8000808 <main+0x2c>
+ 8000816:	bf00      	nop
+ 8000818:	20000030 	.word	0x20000030
+ 800081c:	40011000 	.word	0x40011000
 
-080005a4 <Reset_Handler>:
+08000820 <GPIO_init>:
+//        GPIOC->BSRR |= GPIO_BSRR_BS13;
+    }
+
+}
+
+void GPIO_init(){
+ 8000820:	b480      	push	{r7}
+ 8000822:	af00      	add	r7, sp, #0
+
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;			//Тактирование GPIOA
+ 8000824:	4b13      	ldr	r3, [pc, #76]	; (8000874 <GPIO_init+0x54>)
+ 8000826:	699b      	ldr	r3, [r3, #24]
+ 8000828:	4a12      	ldr	r2, [pc, #72]	; (8000874 <GPIO_init+0x54>)
+ 800082a:	f043 0304 	orr.w	r3, r3, #4
+ 800082e:	6193      	str	r3, [r2, #24]
+    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;			//Тактирование GPIOB
+ 8000830:	4b10      	ldr	r3, [pc, #64]	; (8000874 <GPIO_init+0x54>)
+ 8000832:	699b      	ldr	r3, [r3, #24]
+ 8000834:	4a0f      	ldr	r2, [pc, #60]	; (8000874 <GPIO_init+0x54>)
+ 8000836:	f043 0308 	orr.w	r3, r3, #8
+ 800083a:	6193      	str	r3, [r2, #24]
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;			//Тактирование GPIOAC
+ 800083c:	4b0d      	ldr	r3, [pc, #52]	; (8000874 <GPIO_init+0x54>)
+ 800083e:	699b      	ldr	r3, [r3, #24]
+ 8000840:	4a0c      	ldr	r2, [pc, #48]	; (8000874 <GPIO_init+0x54>)
+ 8000842:	f043 0310 	orr.w	r3, r3, #16
+ 8000846:	6193      	str	r3, [r2, #24]
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;			//Вкл. тактирование алтернативной функции
+ 8000848:	4b0a      	ldr	r3, [pc, #40]	; (8000874 <GPIO_init+0x54>)
+ 800084a:	699b      	ldr	r3, [r3, #24]
+ 800084c:	4a09      	ldr	r2, [pc, #36]	; (8000874 <GPIO_init+0x54>)
+ 800084e:	f043 0301 	orr.w	r3, r3, #1
+ 8000852:	6193      	str	r3, [r2, #24]
+
+    GPIOC->CRH &= ~GPIO_CRH_CNF13;			//обнуление регистра CNF
+ 8000854:	4b08      	ldr	r3, [pc, #32]	; (8000878 <GPIO_init+0x58>)
+ 8000856:	685b      	ldr	r3, [r3, #4]
+ 8000858:	4a07      	ldr	r2, [pc, #28]	; (8000878 <GPIO_init+0x58>)
+ 800085a:	f423 0340 	bic.w	r3, r3, #12582912	; 0xc00000
+ 800085e:	6053      	str	r3, [r2, #4]
+    GPIOC->CRH |= GPIO_CRH_MODE13_0;			//настройка для push-pull
+ 8000860:	4b05      	ldr	r3, [pc, #20]	; (8000878 <GPIO_init+0x58>)
+ 8000862:	685b      	ldr	r3, [r3, #4]
+ 8000864:	4a04      	ldr	r2, [pc, #16]	; (8000878 <GPIO_init+0x58>)
+ 8000866:	f443 1380 	orr.w	r3, r3, #1048576	; 0x100000
+ 800086a:	6053      	str	r3, [r2, #4]
+}
+ 800086c:	bf00      	nop
+ 800086e:	46bd      	mov	sp, r7
+ 8000870:	bc80      	pop	{r7}
+ 8000872:	4770      	bx	lr
+ 8000874:	40021000 	.word	0x40021000
+ 8000878:	40011000 	.word	0x40011000
+
+0800087c <ADC_DMA_Init>:
+
+
+void ADC_DMA_Init(void){
+ 800087c:	b580      	push	{r7, lr}
+ 800087e:	af00      	add	r7, sp, #0
+    RCC->AHBENR |= RCC_AHBENR_DMA1EN;		//Вкл. тактирование DMA
+ 8000880:	4b2d      	ldr	r3, [pc, #180]	; (8000938 <ADC_DMA_Init+0xbc>)
+ 8000882:	695b      	ldr	r3, [r3, #20]
+ 8000884:	4a2c      	ldr	r2, [pc, #176]	; (8000938 <ADC_DMA_Init+0xbc>)
+ 8000886:	f043 0301 	orr.w	r3, r3, #1
+ 800088a:	6153      	str	r3, [r2, #20]
+
+    DMA1_Channel1->CCR &= ~DMA_CCR_EN;  	//Отключение 1ого канала
+ 800088c:	4b2b      	ldr	r3, [pc, #172]	; (800093c <ADC_DMA_Init+0xc0>)
+ 800088e:	681b      	ldr	r3, [r3, #0]
+ 8000890:	4a2a      	ldr	r2, [pc, #168]	; (800093c <ADC_DMA_Init+0xc0>)
+ 8000892:	f023 0301 	bic.w	r3, r3, #1
+ 8000896:	6013      	str	r3, [r2, #0]
+
+    DMA1_Channel1->CCR |= DMA_CCR_TCIE; 	//Включение прерывания при полной передачи данных
+ 8000898:	4b28      	ldr	r3, [pc, #160]	; (800093c <ADC_DMA_Init+0xc0>)
+ 800089a:	681b      	ldr	r3, [r3, #0]
+ 800089c:	4a27      	ldr	r2, [pc, #156]	; (800093c <ADC_DMA_Init+0xc0>)
+ 800089e:	f043 0302 	orr.w	r3, r3, #2
+ 80008a2:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR |= DMA_CCR_TEIE;  	//Включение прерываня из-за ошибки передачи
+ 80008a4:	4b25      	ldr	r3, [pc, #148]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008a6:	681b      	ldr	r3, [r3, #0]
+ 80008a8:	4a24      	ldr	r2, [pc, #144]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008aa:	f043 0308 	orr.w	r3, r3, #8
+ 80008ae:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR &= ~DMA_CCR_DIR;  	//Чтения данных из переферии
+ 80008b0:	4b22      	ldr	r3, [pc, #136]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008b2:	681b      	ldr	r3, [r3, #0]
+ 80008b4:	4a21      	ldr	r2, [pc, #132]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008b6:	f023 0310 	bic.w	r3, r3, #16
+ 80008ba:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR |= DMA_CCR_CIRC;  	//Включение кольцевого буфера
+ 80008bc:	4b1f      	ldr	r3, [pc, #124]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008be:	681b      	ldr	r3, [r3, #0]
+ 80008c0:	4a1e      	ldr	r2, [pc, #120]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008c2:	f043 0320 	orr.w	r3, r3, #32
+ 80008c6:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR &= ~DMA_CCR_PINC;  	//Адрес переферии неизменный => не инкрементируется
+ 80008c8:	4b1c      	ldr	r3, [pc, #112]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008ca:	681b      	ldr	r3, [r3, #0]
+ 80008cc:	4a1b      	ldr	r2, [pc, #108]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008ce:	f023 0340 	bic.w	r3, r3, #64	; 0x40
+ 80008d2:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR |= DMA_CCR_MINC;  	//Инкрементирование адреса памяти
+ 80008d4:	4b19      	ldr	r3, [pc, #100]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008d6:	681b      	ldr	r3, [r3, #0]
+ 80008d8:	4a18      	ldr	r2, [pc, #96]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008da:	f043 0380 	orr.w	r3, r3, #128	; 0x80
+ 80008de:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR |= DMA_CCR_PSIZE_0;  	//Задал размерность данных 8бит для переферии
+ 80008e0:	4b16      	ldr	r3, [pc, #88]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008e2:	681b      	ldr	r3, [r3, #0]
+ 80008e4:	4a15      	ldr	r2, [pc, #84]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008e6:	f443 7380 	orr.w	r3, r3, #256	; 0x100
+ 80008ea:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR |= DMA_CCR_MSIZE_0;  	//Задал размерность данных 8бит для пкамяти
+ 80008ec:	4b13      	ldr	r3, [pc, #76]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008ee:	681b      	ldr	r3, [r3, #0]
+ 80008f0:	4a12      	ldr	r2, [pc, #72]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008f2:	f443 6380 	orr.w	r3, r3, #1024	; 0x400
+ 80008f6:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR &= ~DMA_CCR_PL;  	//Задал приоритетность TODO проверить работу приоритетности
+ 80008f8:	4b10      	ldr	r3, [pc, #64]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008fa:	681b      	ldr	r3, [r3, #0]
+ 80008fc:	4a0f      	ldr	r2, [pc, #60]	; (800093c <ADC_DMA_Init+0xc0>)
+ 80008fe:	f423 5340 	bic.w	r3, r3, #12288	; 0x3000
+ 8000902:	6013      	str	r3, [r2, #0]
+    DMA1_Channel1->CCR &= ~DMA_CCR_MEM2MEM;
+ 8000904:	4b0d      	ldr	r3, [pc, #52]	; (800093c <ADC_DMA_Init+0xc0>)
+ 8000906:	681b      	ldr	r3, [r3, #0]
+ 8000908:	4a0c      	ldr	r2, [pc, #48]	; (800093c <ADC_DMA_Init+0xc0>)
+ 800090a:	f423 4380 	bic.w	r3, r3, #16384	; 0x4000
+ 800090e:	6013      	str	r3, [r2, #0]
+
+    DMA1_Channel1->CNDTR = DMA_BUFF_SIZE;			//задал количество данных
+ 8000910:	4b0a      	ldr	r3, [pc, #40]	; (800093c <ADC_DMA_Init+0xc0>)
+ 8000912:	2204      	movs	r2, #4
+ 8000914:	605a      	str	r2, [r3, #4]
+    DMA1_Channel1->CPAR = (uint32_t)&(ADC1->DR);		//Указатель на адрес в ADC_IN0
+ 8000916:	4b09      	ldr	r3, [pc, #36]	; (800093c <ADC_DMA_Init+0xc0>)
+ 8000918:	4a09      	ldr	r2, [pc, #36]	; (8000940 <ADC_DMA_Init+0xc4>)
+ 800091a:	609a      	str	r2, [r3, #8]
+    DMA1_Channel1->CMAR = (uint32_t)buff;			//Буфер для данных
+ 800091c:	4b07      	ldr	r3, [pc, #28]	; (800093c <ADC_DMA_Init+0xc0>)
+ 800091e:	4a09      	ldr	r2, [pc, #36]	; (8000944 <ADC_DMA_Init+0xc8>)
+ 8000920:	60da      	str	r2, [r3, #12]
+
+    NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+ 8000922:	200b      	movs	r0, #11
+ 8000924:	f7ff ff3e 	bl	80007a4 <__NVIC_EnableIRQ>
+    DMA1_Channel1->CCR |= DMA_CCR_EN;  				//Включение 1ого канала
+ 8000928:	4b04      	ldr	r3, [pc, #16]	; (800093c <ADC_DMA_Init+0xc0>)
+ 800092a:	681b      	ldr	r3, [r3, #0]
+ 800092c:	4a03      	ldr	r2, [pc, #12]	; (800093c <ADC_DMA_Init+0xc0>)
+ 800092e:	f043 0301 	orr.w	r3, r3, #1
+ 8000932:	6013      	str	r3, [r2, #0]
+}
+ 8000934:	bf00      	nop
+ 8000936:	bd80      	pop	{r7, pc}
+ 8000938:	40021000 	.word	0x40021000
+ 800093c:	40020008 	.word	0x40020008
+ 8000940:	4001244c 	.word	0x4001244c
+ 8000944:	20000034 	.word	0x20000034
+
+08000948 <ADC_Init>:
+
+
+void ADC_Init(){
+ 8000948:	b580      	push	{r7, lr}
+ 800094a:	af00      	add	r7, sp, #0
+    //RCC
+    RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
+ 800094c:	4b2d      	ldr	r3, [pc, #180]	; (8000a04 <ADC_Init+0xbc>)
+ 800094e:	699b      	ldr	r3, [r3, #24]
+ 8000950:	4a2c      	ldr	r2, [pc, #176]	; (8000a04 <ADC_Init+0xbc>)
+ 8000952:	f443 7300 	orr.w	r3, r3, #512	; 0x200
+ 8000956:	6193      	str	r3, [r2, #24]
+
+    /*GPIO
+     *PA0 -> ADC1_IN0 */
+    GPIOA->CRL &= ~GPIO_CRL_MODE0;		//|0|0| reserved
+ 8000958:	4b2b      	ldr	r3, [pc, #172]	; (8000a08 <ADC_Init+0xc0>)
+ 800095a:	681b      	ldr	r3, [r3, #0]
+ 800095c:	4a2a      	ldr	r2, [pc, #168]	; (8000a08 <ADC_Init+0xc0>)
+ 800095e:	f023 0303 	bic.w	r3, r3, #3
+ 8000962:	6013      	str	r3, [r2, #0]
+    GPIOA->CRL &= ~GPIO_CRL_CNF0;		//|0|0| analog
+ 8000964:	4b28      	ldr	r3, [pc, #160]	; (8000a08 <ADC_Init+0xc0>)
+ 8000966:	681b      	ldr	r3, [r3, #0]
+ 8000968:	4a27      	ldr	r2, [pc, #156]	; (8000a08 <ADC_Init+0xc0>)
+ 800096a:	f023 030c 	bic.w	r3, r3, #12
+ 800096e:	6013      	str	r3, [r2, #0]
+
+    ADC1->CR1 = 0x0;				//Очистка всех регистров
+ 8000970:	4b26      	ldr	r3, [pc, #152]	; (8000a0c <ADC_Init+0xc4>)
+ 8000972:	2200      	movs	r2, #0
+ 8000974:	605a      	str	r2, [r3, #4]
+
+    ADC1->CR2 |= ADC_CR2_ADON;			//Вкл. АЦП
+ 8000976:	4b25      	ldr	r3, [pc, #148]	; (8000a0c <ADC_Init+0xc4>)
+ 8000978:	689b      	ldr	r3, [r3, #8]
+ 800097a:	4a24      	ldr	r2, [pc, #144]	; (8000a0c <ADC_Init+0xc4>)
+ 800097c:	f043 0301 	orr.w	r3, r3, #1
+ 8000980:	6093      	str	r3, [r2, #8]
+    ADC1->CR2 |= ADC_CR2_CONT;			//Режим непрерывного преобразования
+ 8000982:	4b22      	ldr	r3, [pc, #136]	; (8000a0c <ADC_Init+0xc4>)
+ 8000984:	689b      	ldr	r3, [r3, #8]
+ 8000986:	4a21      	ldr	r2, [pc, #132]	; (8000a0c <ADC_Init+0xc4>)
+ 8000988:	f043 0302 	orr.w	r3, r3, #2
+ 800098c:	6093      	str	r3, [r2, #8]
+    ADC1->CR2 |= ADC_CR2_CAL;			//Включить калибровку. Рек. перед включение ацп
+ 800098e:	4b1f      	ldr	r3, [pc, #124]	; (8000a0c <ADC_Init+0xc4>)
+ 8000990:	689b      	ldr	r3, [r3, #8]
+ 8000992:	4a1e      	ldr	r2, [pc, #120]	; (8000a0c <ADC_Init+0xc4>)
+ 8000994:	f043 0304 	orr.w	r3, r3, #4
+ 8000998:	6093      	str	r3, [r2, #8]
+    ADC1->CR2 |= ADC_CR2_DMA;			//Включение DMA
+ 800099a:	4b1c      	ldr	r3, [pc, #112]	; (8000a0c <ADC_Init+0xc4>)
+ 800099c:	689b      	ldr	r3, [r3, #8]
+ 800099e:	4a1b      	ldr	r2, [pc, #108]	; (8000a0c <ADC_Init+0xc4>)
+ 80009a0:	f443 7380 	orr.w	r3, r3, #256	; 0x100
+ 80009a4:	6093      	str	r3, [r2, #8]
+    while(ADC1->CR2 & ADC_CR2_CAL);
+ 80009a6:	bf00      	nop
+ 80009a8:	4b18      	ldr	r3, [pc, #96]	; (8000a0c <ADC_Init+0xc4>)
+ 80009aa:	689b      	ldr	r3, [r3, #8]
+ 80009ac:	f003 0304 	and.w	r3, r3, #4
+ 80009b0:	2b00      	cmp	r3, #0
+ 80009b2:	d1f9      	bne.n	80009a8 <ADC_Init+0x60>
+
+    ADC1->CR2 &= ~ADC_CR2_ALIGN;		//Выравнивнивание данных по правому краю regular
+ 80009b4:	4b15      	ldr	r3, [pc, #84]	; (8000a0c <ADC_Init+0xc4>)
+ 80009b6:	689b      	ldr	r3, [r3, #8]
+ 80009b8:	4a14      	ldr	r2, [pc, #80]	; (8000a0c <ADC_Init+0xc4>)
+ 80009ba:	f423 6300 	bic.w	r3, r3, #2048	; 0x800
+ 80009be:	6093      	str	r3, [r2, #8]
+    ADC1->CR2 |= ADC_CR2_EXTSEL;		//Вкл. преобразование программно
+ 80009c0:	4b12      	ldr	r3, [pc, #72]	; (8000a0c <ADC_Init+0xc4>)
+ 80009c2:	689b      	ldr	r3, [r3, #8]
+ 80009c4:	4a11      	ldr	r2, [pc, #68]	; (8000a0c <ADC_Init+0xc4>)
+ 80009c6:	f443 2360 	orr.w	r3, r3, #917504	; 0xe0000
+ 80009ca:	6093      	str	r3, [r2, #8]
+    ADC1->CR2 &= ~ADC_CR2_EXTTRIG;		//Отключение преобраз. по внешнему переключению.
+ 80009cc:	4b0f      	ldr	r3, [pc, #60]	; (8000a0c <ADC_Init+0xc4>)
+ 80009ce:	689b      	ldr	r3, [r3, #8]
+ 80009d0:	4a0e      	ldr	r2, [pc, #56]	; (8000a0c <ADC_Init+0xc4>)
+ 80009d2:	f423 1380 	bic.w	r3, r3, #1048576	; 0x100000
+ 80009d6:	6093      	str	r3, [r2, #8]
+
+    ADC1->SMPR2 |= ADC_SMPR2_SMP0;		//Сэмплирование(обработка сигнала) 239.5 канала 0 PA0
+ 80009d8:	4b0c      	ldr	r3, [pc, #48]	; (8000a0c <ADC_Init+0xc4>)
+ 80009da:	691b      	ldr	r3, [r3, #16]
+ 80009dc:	4a0b      	ldr	r2, [pc, #44]	; (8000a0c <ADC_Init+0xc4>)
+ 80009de:	f043 0307 	orr.w	r3, r3, #7
+ 80009e2:	6113      	str	r3, [r2, #16]
+
+    ADC1->SQR1 |= ADC_SQR1_L_0;//(0x1 << ADC_SQR1_L_Pos);	//Задаю кол-во преобразований
+ 80009e4:	4b09      	ldr	r3, [pc, #36]	; (8000a0c <ADC_Init+0xc4>)
+ 80009e6:	6adb      	ldr	r3, [r3, #44]	; 0x2c
+ 80009e8:	4a08      	ldr	r2, [pc, #32]	; (8000a0c <ADC_Init+0xc4>)
+ 80009ea:	f443 1380 	orr.w	r3, r3, #1048576	; 0x100000
+ 80009ee:	62d3      	str	r3, [r2, #44]	; 0x2c
+    ADC1->SQR3 |= ADC_SQR3_SQ2;			//Выполняет преобразование в 2 канале
+ 80009f0:	4b06      	ldr	r3, [pc, #24]	; (8000a0c <ADC_Init+0xc4>)
+ 80009f2:	6b5b      	ldr	r3, [r3, #52]	; 0x34
+ 80009f4:	4a05      	ldr	r2, [pc, #20]	; (8000a0c <ADC_Init+0xc4>)
+ 80009f6:	f443 7378 	orr.w	r3, r3, #992	; 0x3e0
+ 80009fa:	6353      	str	r3, [r2, #52]	; 0x34
+
+    ADC_DMA_Init();
+ 80009fc:	f7ff ff3e 	bl	800087c <ADC_DMA_Init>
+}
+ 8000a00:	bf00      	nop
+ 8000a02:	bd80      	pop	{r7, pc}
+ 8000a04:	40021000 	.word	0x40021000
+ 8000a08:	40010800 	.word	0x40010800
+ 8000a0c:	40012400 	.word	0x40012400
+
+08000a10 <Reset_Handler>:
   .weak Reset_Handler
   .type Reset_Handler, %function
 Reset_Handler:
 
 /* Copy the data segment initializers from flash to SRAM */
   ldr r0, =_sdata
- 80005a4:	480c      	ldr	r0, [pc, #48]	; (80005d8 <LoopFillZerobss+0x12>)
+ 8000a10:	480c      	ldr	r0, [pc, #48]	; (8000a44 <LoopFillZerobss+0x12>)
   ldr r1, =_edata
- 80005a6:	490d      	ldr	r1, [pc, #52]	; (80005dc <LoopFillZerobss+0x16>)
+ 8000a12:	490d      	ldr	r1, [pc, #52]	; (8000a48 <LoopFillZerobss+0x16>)
   ldr r2, =_sidata
- 80005a8:	4a0d      	ldr	r2, [pc, #52]	; (80005e0 <LoopFillZerobss+0x1a>)
+ 8000a14:	4a0d      	ldr	r2, [pc, #52]	; (8000a4c <LoopFillZerobss+0x1a>)
   movs r3, #0
- 80005aa:	2300      	movs	r3, #0
+ 8000a16:	2300      	movs	r3, #0
   b LoopCopyDataInit
- 80005ac:	e002      	b.n	80005b4 <LoopCopyDataInit>
+ 8000a18:	e002      	b.n	8000a20 <LoopCopyDataInit>
 
-080005ae <CopyDataInit>:
+08000a1a <CopyDataInit>:
 
 CopyDataInit:
   ldr r4, [r2, r3]
- 80005ae:	58d4      	ldr	r4, [r2, r3]
+ 8000a1a:	58d4      	ldr	r4, [r2, r3]
   str r4, [r0, r3]
- 80005b0:	50c4      	str	r4, [r0, r3]
+ 8000a1c:	50c4      	str	r4, [r0, r3]
   adds r3, r3, #4
- 80005b2:	3304      	adds	r3, #4
+ 8000a1e:	3304      	adds	r3, #4
 
-080005b4 <LoopCopyDataInit>:
+08000a20 <LoopCopyDataInit>:
 
 LoopCopyDataInit:
   adds r4, r0, r3
- 80005b4:	18c4      	adds	r4, r0, r3
+ 8000a20:	18c4      	adds	r4, r0, r3
   cmp r4, r1
- 80005b6:	428c      	cmp	r4, r1
+ 8000a22:	428c      	cmp	r4, r1
   bcc CopyDataInit
- 80005b8:	d3f9      	bcc.n	80005ae <CopyDataInit>
+ 8000a24:	d3f9      	bcc.n	8000a1a <CopyDataInit>
   
 /* Zero fill the bss segment. */
   ldr r2, =_sbss
- 80005ba:	4a0a      	ldr	r2, [pc, #40]	; (80005e4 <LoopFillZerobss+0x1e>)
+ 8000a26:	4a0a      	ldr	r2, [pc, #40]	; (8000a50 <LoopFillZerobss+0x1e>)
   ldr r4, =_ebss
- 80005bc:	4c0a      	ldr	r4, [pc, #40]	; (80005e8 <LoopFillZerobss+0x22>)
+ 8000a28:	4c0a      	ldr	r4, [pc, #40]	; (8000a54 <LoopFillZerobss+0x22>)
   movs r3, #0
- 80005be:	2300      	movs	r3, #0
+ 8000a2a:	2300      	movs	r3, #0
   b LoopFillZerobss
- 80005c0:	e001      	b.n	80005c6 <LoopFillZerobss>
+ 8000a2c:	e001      	b.n	8000a32 <LoopFillZerobss>
 
-080005c2 <FillZerobss>:
+08000a2e <FillZerobss>:
 
 FillZerobss:
   str  r3, [r2]
- 80005c2:	6013      	str	r3, [r2, #0]
+ 8000a2e:	6013      	str	r3, [r2, #0]
   adds r2, r2, #4
- 80005c4:	3204      	adds	r2, #4
+ 8000a30:	3204      	adds	r2, #4
 
-080005c6 <LoopFillZerobss>:
+08000a32 <LoopFillZerobss>:
 
 LoopFillZerobss:
   cmp r2, r4
- 80005c6:	42a2      	cmp	r2, r4
+ 8000a32:	42a2      	cmp	r2, r4
   bcc FillZerobss
- 80005c8:	d3fb      	bcc.n	80005c2 <FillZerobss>
+ 8000a34:	d3fb      	bcc.n	8000a2e <FillZerobss>
 
 /* Call the clock system intitialization function.*/
     bl  SystemInit
- 80005ca:	f7ff fdbf 	bl	800014c <SystemInit>
+ 8000a36:	f7ff fb89 	bl	800014c <SystemInit>
 /* Call static constructors */
     bl __libc_init_array
- 80005ce:	f000 f80f 	bl	80005f0 <__libc_init_array>
+ 8000a3a:	f000 f80f 	bl	8000a5c <__libc_init_array>
 /* Call the application's entry point.*/
   bl main
- 80005d2:	f7ff ffdd 	bl	8000590 <main>
+ 8000a3e:	f7ff fecd 	bl	80007dc <main>
   bx lr
- 80005d6:	4770      	bx	lr
+ 8000a42:	4770      	bx	lr
   ldr r0, =_sdata
- 80005d8:	20000000 	.word	0x20000000
+ 8000a44:	20000000 	.word	0x20000000
   ldr r1, =_edata
- 80005dc:	20000000 	.word	0x20000000
+ 8000a48:	20000000 	.word	0x20000000
   ldr r2, =_sidata
- 80005e0:	08000658 	.word	0x08000658
+ 8000a4c:	08000afc 	.word	0x08000afc
   ldr r2, =_sbss
- 80005e4:	20000000 	.word	0x20000000
+ 8000a50:	20000000 	.word	0x20000000
   ldr r4, =_ebss
- 80005e8:	2000002c 	.word	0x2000002c
+ 8000a54:	2000003c 	.word	0x2000003c
 
-080005ec <ADC1_2_IRQHandler>:
+08000a58 <ADC1_2_IRQHandler>:
  * @retval : None
 */
     .section .text.Default_Handler,"ax",%progbits
 Default_Handler:
 Infinite_Loop:
   b Infinite_Loop
- 80005ec:	e7fe      	b.n	80005ec <ADC1_2_IRQHandler>
+ 8000a58:	e7fe      	b.n	8000a58 <ADC1_2_IRQHandler>
 	...
 
-080005f0 <__libc_init_array>:
- 80005f0:	b570      	push	{r4, r5, r6, lr}
- 80005f2:	2600      	movs	r6, #0
- 80005f4:	4d0c      	ldr	r5, [pc, #48]	; (8000628 <__libc_init_array+0x38>)
- 80005f6:	4c0d      	ldr	r4, [pc, #52]	; (800062c <__libc_init_array+0x3c>)
- 80005f8:	1b64      	subs	r4, r4, r5
- 80005fa:	10a4      	asrs	r4, r4, #2
- 80005fc:	42a6      	cmp	r6, r4
- 80005fe:	d109      	bne.n	8000614 <__libc_init_array+0x24>
- 8000600:	f000 f81a 	bl	8000638 <_init>
- 8000604:	2600      	movs	r6, #0
- 8000606:	4d0a      	ldr	r5, [pc, #40]	; (8000630 <__libc_init_array+0x40>)
- 8000608:	4c0a      	ldr	r4, [pc, #40]	; (8000634 <__libc_init_array+0x44>)
- 800060a:	1b64      	subs	r4, r4, r5
- 800060c:	10a4      	asrs	r4, r4, #2
- 800060e:	42a6      	cmp	r6, r4
- 8000610:	d105      	bne.n	800061e <__libc_init_array+0x2e>
- 8000612:	bd70      	pop	{r4, r5, r6, pc}
- 8000614:	f855 3b04 	ldr.w	r3, [r5], #4
- 8000618:	4798      	blx	r3
- 800061a:	3601      	adds	r6, #1
- 800061c:	e7ee      	b.n	80005fc <__libc_init_array+0xc>
- 800061e:	f855 3b04 	ldr.w	r3, [r5], #4
- 8000622:	4798      	blx	r3
- 8000624:	3601      	adds	r6, #1
- 8000626:	e7f2      	b.n	800060e <__libc_init_array+0x1e>
- 8000628:	08000650 	.word	0x08000650
- 800062c:	08000650 	.word	0x08000650
- 8000630:	08000650 	.word	0x08000650
- 8000634:	08000654 	.word	0x08000654
+08000a5c <__libc_init_array>:
+ 8000a5c:	b570      	push	{r4, r5, r6, lr}
+ 8000a5e:	2600      	movs	r6, #0
+ 8000a60:	4d0c      	ldr	r5, [pc, #48]	; (8000a94 <__libc_init_array+0x38>)
+ 8000a62:	4c0d      	ldr	r4, [pc, #52]	; (8000a98 <__libc_init_array+0x3c>)
+ 8000a64:	1b64      	subs	r4, r4, r5
+ 8000a66:	10a4      	asrs	r4, r4, #2
+ 8000a68:	42a6      	cmp	r6, r4
+ 8000a6a:	d109      	bne.n	8000a80 <__libc_init_array+0x24>
+ 8000a6c:	f000 f81a 	bl	8000aa4 <_init>
+ 8000a70:	2600      	movs	r6, #0
+ 8000a72:	4d0a      	ldr	r5, [pc, #40]	; (8000a9c <__libc_init_array+0x40>)
+ 8000a74:	4c0a      	ldr	r4, [pc, #40]	; (8000aa0 <__libc_init_array+0x44>)
+ 8000a76:	1b64      	subs	r4, r4, r5
+ 8000a78:	10a4      	asrs	r4, r4, #2
+ 8000a7a:	42a6      	cmp	r6, r4
+ 8000a7c:	d105      	bne.n	8000a8a <__libc_init_array+0x2e>
+ 8000a7e:	bd70      	pop	{r4, r5, r6, pc}
+ 8000a80:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000a84:	4798      	blx	r3
+ 8000a86:	3601      	adds	r6, #1
+ 8000a88:	e7ee      	b.n	8000a68 <__libc_init_array+0xc>
+ 8000a8a:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000a8e:	4798      	blx	r3
+ 8000a90:	3601      	adds	r6, #1
+ 8000a92:	e7f2      	b.n	8000a7a <__libc_init_array+0x1e>
+ 8000a94:	08000af4 	.word	0x08000af4
+ 8000a98:	08000af4 	.word	0x08000af4
+ 8000a9c:	08000af4 	.word	0x08000af4
+ 8000aa0:	08000af8 	.word	0x08000af8
 
-08000638 <_init>:
- 8000638:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 800063a:	bf00      	nop
- 800063c:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 800063e:	bc08      	pop	{r3}
- 8000640:	469e      	mov	lr, r3
- 8000642:	4770      	bx	lr
+08000aa4 <_init>:
+ 8000aa4:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000aa6:	bf00      	nop
+ 8000aa8:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000aaa:	bc08      	pop	{r3}
+ 8000aac:	469e      	mov	lr, r3
+ 8000aae:	4770      	bx	lr
 
-08000644 <_fini>:
- 8000644:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 8000646:	bf00      	nop
- 8000648:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 800064a:	bc08      	pop	{r3}
- 800064c:	469e      	mov	lr, r3
- 800064e:	4770      	bx	lr
+08000ab0 <_fini>:
+ 8000ab0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000ab2:	bf00      	nop
+ 8000ab4:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000ab6:	bc08      	pop	{r3}
+ 8000ab8:	469e      	mov	lr, r3
+ 8000aba:	4770      	bx	lr
