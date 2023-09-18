@@ -174,7 +174,7 @@ void ILI_Reset(){
 	delay_time(120);
 }
 
-INIT_STATUS ILI_9341_init(){
+ErrorStatus ILI_9341_init(){
 	GPIO_Init();
 
 	ILI_Reset();

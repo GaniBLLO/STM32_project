@@ -5,6 +5,7 @@
  *      Author: AnastasII
  */
 #include "stm32f103xb.h"
+#include "stm32f1xx.h"
 #include "main.h"
 
 #ifndef ILI9341_H_
@@ -37,6 +38,6 @@ typedef enum{
 void ILI_Reset(void);
 void read_disp_id(uint8_t command);
 void Send_Command(uint8_t data, uint8_t command);
-INIT_STATUS ILI_9341_init();
+ErrorStatus ILI_9341_init();
 void GPIO_Init();
 #endif /* ILI9341_H_ */
