@@ -7,10 +7,11 @@
 
 #include "stdint.h"
 #include "LCD_1602.h"
-#define LCD_ADDR	0x38
-#define PIN_RS    (1 << 0)
-#define PIN_EN    (1 << 2)
-#define BACKLIGHT (1 << 3)
+
+
+#define PIN_RS    	(1 << 0)
+#define PIN_EN    	(1 << 2)
+#define BACKLIGHT 	(1 << 3)
 
 ErrorStatus LCD_SendInternal(uint8_t lcd_addr, uint8_t data, uint8_t flags) {
     uint8_t up = data & 0xF0;
@@ -22,6 +23,8 @@ ErrorStatus LCD_SendInternal(uint8_t lcd_addr, uint8_t data, uint8_t flags) {
     data_arr[2] = lo|flags|BACKLIGHT|PIN_EN;
     data_arr[3] = lo|flags|BACKLIGHT;
 
+    //LCD_TX(data_arr,)
+    //HAL_I2C_Master_Transmit(&hi2c1, lcd_addr, data_arr, sizeof(data_arr), HAL_MAX_DELAY);
     return SUCCESS;
 }
 
@@ -40,12 +43,27 @@ void LCD_SendString(uint8_t lcd_addr, char *str) {
     }
 }
 
-ErrorStatus I2C_Scan() {
-    char info[] = "Scanning I2C bus...\r\n";
-    for(uint16_t i = 0; i < 128; i++) {
+ErrorStatus I2C_Scan(uint8_t address) {
+    I2C1->CR1 &= ~I2C_CR1_POS;		/*Этот бит ставится что бы показать,
+									 *что след.бит будет принят в регистр -> DR
+									 *для его дальнейшего смещения*/
 
-    }
-    return 1;
+   	I2C1->CR1 |= I2C_CR1_START;		//Генерируем стартовый бит
+   	while(!(I2C1->SR1 & I2C_SR1_SB));	//Ждём пока регситр не сгенерирует бит старта. 0 => ждём... 1 = > готово!
+
+   	I2C1->DR = address & (uint8_t)(~I2C_OAR1_ADD0);	//В сдвиговый регистр добавляю адрес устройства
+   	do{
+   	    (void)I2C1->SR1;
+   	    (void)I2C1->SR2;
+   	} while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
+
+   	I2C1->CR1 |= I2C_CR1_STOP;
+   	do{
+   	    (void)I2C1->SR1;
+   	    (void)I2C1->SR2;
+   	}while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
+
+   	return SUCCESS;
 }
 
 void LCD_Init(uint8_t lcd_addr) {
@@ -59,16 +77,16 @@ void LCD_Init(uint8_t lcd_addr) {
     LCD_SendCommand(lcd_addr, 0b00000001);
 }
 
-ErrorStatus LCD_1602_init() {
-    I2C_Scan();
-    LCD_Init(LCD_ADDR);
+ErrorStatus LCD_1602_init(uint8_t address) {
+    I2C_Scan(address);
+    LCD_Init(address);
 
     // set address to 0x00
-    LCD_SendCommand(LCD_ADDR, 0b10000000);
-    LCD_SendString(LCD_ADDR, " Using 1602 LCD");
+    LCD_SendCommand(address, 0b10000000);
+    LCD_SendString(address, " Using 1602 LCD");
 
     // set address to 0x40
-    LCD_SendCommand(LCD_ADDR, 0b11000000);
-    LCD_SendString(LCD_ADDR, "  over I2C bus");
+    LCD_SendCommand(address, 0b11000000);
+    LCD_SendString(address, "  over I2C bus");
     return SUCCESS;
 }

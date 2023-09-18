@@ -10,7 +10,7 @@
 
 #include "stm32f1xx.h"
 
-ErrorStatus LCD_init(void);
+ErrorStatus LCD_1602_init(uint8_t address);
 ErrorStatus LCD_Scan(uint8_t address);
 
 #endif /* INC_LCD_1602_H_ */
