@@ -27,7 +27,7 @@
 
 /************Functions declaration**************/
 
-ErrorStatus LCD_1602_init(void);
+ErrorStatus LCD_1602_init(uint8_t address);
 void Sys_clock(void);
 void GPIO_init(void);
 void TIMx_init(void);
@@ -52,10 +52,10 @@ int main(){
     TIMx_init();
     ADC_Init();
     I2C_init();
-    I2C_send(ADDR << 1, 10);
-//    if(LCD_1602_init() != SUCCESS){
-//    	err = 0x1;
-//    }
+
+    if(LCD_1602_init(ADDR) != SUCCESS){
+    	err = 0x1;
+    }
 //    if(ILI_9341_init() != OK){
 	//TODO ERR!
 //    }
