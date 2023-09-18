@@ -1,2 +1,1 @@
-../Core/Src/I2C.c:11:6:I2C_init	8	static
-../Core/Src/I2C.c:50:9:I2C_send	24	static
+../Core/Src/I2C.c:12:6:I2C_init	8	static
