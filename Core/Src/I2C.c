@@ -6,6 +6,7 @@
  */
 
 #include "stm32f103xb.h"
+#include "I2C.h"
 #include <IRQ.h>
 
 void I2C_init(){
@@ -47,26 +48,4 @@ void I2C_init(){
     I2C1->CR1 |= I2C_CR1_PE;		//Включение интерфейса
 }
 
-uint8_t I2C_send(uint8_t address, uint8_t command){
 
-    uint8_t f_ready = 0;
-    I2C1->CR1 &= ~I2C_CR1_POS;		/*Этот бит ставится что бы показать,
-					 *что след.бит будет принят в регистр -> DR
-					 *для его дальнейшего смещения*/
-
-	I2C1->CR1 |= I2C_CR1_START;		//Генерируем стартовый бит
-	while(!(I2C1->SR1 & I2C_SR1_SB));	//Ждём пока регситр не сгенерирует бит старта. 0 => ждём... 1 = > готово!
-
-	I2C1->DR = address & (uint8_t)(~I2C_OAR1_ADD0);	//В сдвиговый регистр добавляю адрес устройства
-	do{
-	    (void)I2C1->SR1;
-	    (void)I2C1->SR2;
-	} while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
-
-	I2C1->CR1 |= I2C_CR1_STOP;
-	do{
-	    (void)I2C1->SR1;
-	    (void)I2C1->SR2;
-	}while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
-    return f_ready;
-}
