@@ -16,7 +16,7 @@
 #define Enable_RTOS	0
 
 #define DMA_BUFF_SIZE   4
-#define ADDR     	0x37
+#define ADDR     	0x38
 
 #if Enable_RTOS
     #include "FreeRTOS.h"
@@ -35,6 +35,7 @@ void RCC_init();
 void ADC_Init();
 //INIT_STATUS ILI_9341_init();
 void I2C_init();
+void I2C_send();
 //void SPI_init(void);
 
 
@@ -51,10 +52,10 @@ int main(){
     TIMx_init();
     ADC_Init();
     I2C_init();
-
-    if(LCD_1602_init() != SUCCESS){
-    	err = 0x1;
-    }
+    I2C_send(ADDR << 1, 10);
+//    if(LCD_1602_init() != SUCCESS){
+//    	err = 0x1;
+//    }
 //    if(ILI_9341_init() != OK){
 	//TODO ERR!
 //    }
