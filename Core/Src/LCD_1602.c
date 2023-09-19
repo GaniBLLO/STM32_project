@@ -8,7 +8,6 @@
 #include "stdint.h"
 #include "LCD_1602.h"
 
-
 #define PIN_RS    	(1 << 0)
 #define PIN_EN    	(1 << 2)
 #define BACKLIGHT 	(1 << 3)
@@ -23,8 +22,24 @@ ErrorStatus LCD_SendInternal(uint8_t lcd_addr, uint8_t data, uint8_t flags) {
     data_arr[2] = lo|flags|BACKLIGHT|PIN_EN;
     data_arr[3] = lo|flags|BACKLIGHT;
 
-    //LCD_TX(data_arr,)
-    //HAL_I2C_Master_Transmit(&hi2c1, lcd_addr, data_arr, sizeof(data_arr), HAL_MAX_DELAY);
+    if(!(I2C1->SR2 & I2C_SR2_BUSY)){
+    	//ToDo аписать обработку ошибок
+    }
+    I2C1->CR1 &= ~I2C_CR1_POS;				//См.I2C_Scan()
+
+   	I2C1->CR1 |= I2C_CR1_START;
+   	while(!(I2C1->SR1 & I2C_SR1_SB));
+
+	(void)I2C1->SR1;
+   	I2C1->DR = address & (uint8_t)(~I2C_OAR1_ADD0);
+   	while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
+   		//ToDo добавить счётчик
+
+   	if(I2C1->SR1 &I2C_SR1_ADDR){
+   		(void)I2C1->SR1;
+   		(void)I2C1->SR2;
+
+   	}
     return SUCCESS;
 }
 
@@ -51,19 +66,23 @@ ErrorStatus I2C_Scan(uint8_t address) {
    	I2C1->CR1 |= I2C_CR1_START;		//Генерируем стартовый бит
    	while(!(I2C1->SR1 & I2C_SR1_SB));	//Ждём пока регситр не сгенерирует бит старта. 0 => ждём... 1 = > готово!
 
+	(void)I2C1->SR1;
    	I2C1->DR = address & (uint8_t)(~I2C_OAR1_ADD0);	//В сдвиговый регистр добавляю адрес устройства
-   	do{
+//   	do{
+//   	    (void)I2C1->SR2;
+//   	}
+   	while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
+
+   	if(I2C1->SR1 & I2C_SR1_ADDR){
+		I2C1->CR1 |= I2C_CR1_STOP;
    	    (void)I2C1->SR1;
    	    (void)I2C1->SR2;
-   	} while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
-
-   	I2C1->CR1 |= I2C_CR1_STOP;
-   	do{
-   	    (void)I2C1->SR1;
-   	    (void)I2C1->SR2;
-   	}while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
-
-   	return SUCCESS;
+   	    return SUCCESS;
+   	}else{
+   		I2C1->CR1 |= I2C_CR1_STOP;
+   		I2C1->SR1 &= ~I2C_SR1_AF;
+   		return ERROR;
+   	}
 }
 
 void LCD_Init(uint8_t lcd_addr) {
