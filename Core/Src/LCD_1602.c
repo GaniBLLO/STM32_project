@@ -12,6 +12,43 @@
 #define PIN_EN    	(1 << 2)
 #define BACKLIGHT 	(1 << 3)
 
+ErrorStatus LCD_TX(I2C_TypeDef* I2C, uint8_t lcd_addr, uint8_t* data, uint16_t size, uint32_t time){
+
+    if(!(I2C->SR2 & I2C_SR2_BUSY)){
+    	//ToDo написать обработку ошибок
+    }
+    I2C->CR1 &= ~I2C_CR1_POS;				//См.I2C_Scan()
+
+    I2C->CR1 |= I2C_CR1_START;
+    while(!(I2C1->SR1 & I2C_SR1_SB));
+
+    (void)I2C1->SR1;
+    I2C->DR = lcd_addr & (uint8_t)(~I2C_OAR1_ADD0);
+    while(!(I2C->SR1 & I2C_SR1_ADDR) && !(I2C->SR1 & I2C_SR1_AF));
+	    //ToDo добавить счётчик
+
+    if(I2C1->SR1 &I2C_SR1_ADDR){
+	(void)I2C->SR1;
+	(void)I2C->SR2;
+
+	for(uint16_t i = 0; i < size; ++i){
+	    I2C->DR = *(data + i);		//Запись байта
+	    while(!(I2C->SR1 & I2C_SR1_TXE)){
+		if(I2C1->SR1 & I2C_SR1_AF){
+		    I2C->SR1 |= I2C_CR1_STOP;
+		    I2C->SR1 &= ~I2C_SR1_AF;
+		    return ERROR;
+		}
+	    }
+	}
+	I2C->SR1 |= I2C_CR1_STOP;
+	return SUCCESS;
+    }
+    I2C->SR1 |= I2C_CR1_STOP;
+    I2C->SR1 &= ~I2C_SR1_AF;
+    return ERROR;
+}
+
 ErrorStatus LCD_SendInternal(uint8_t lcd_addr, uint8_t data, uint8_t flags) {
     uint8_t up = data & 0xF0;
     uint8_t lo = (data << 4) & 0xF0;
@@ -22,24 +59,8 @@ ErrorStatus LCD_SendInternal(uint8_t lcd_addr, uint8_t data, uint8_t flags) {
     data_arr[2] = lo|flags|BACKLIGHT|PIN_EN;
     data_arr[3] = lo|flags|BACKLIGHT;
 
-    if(!(I2C1->SR2 & I2C_SR2_BUSY)){
-    	//ToDo аписать обработку ошибок
-    }
-    I2C1->CR1 &= ~I2C_CR1_POS;				//См.I2C_Scan()
-
-   	I2C1->CR1 |= I2C_CR1_START;
-   	while(!(I2C1->SR1 & I2C_SR1_SB));
-
-	(void)I2C1->SR1;
-   	I2C1->DR = address & (uint8_t)(~I2C_OAR1_ADD0);
-   	while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
-   		//ToDo добавить счётчик
-
-   	if(I2C1->SR1 &I2C_SR1_ADDR){
-   		(void)I2C1->SR1;
-   		(void)I2C1->SR2;
-
-   	}
+    if(LCD_TX(I2C1, lcd_addr, data_arr, 4, 100) != SUCCESS)
+	return ERROR;
     return SUCCESS;
 }
 
@@ -60,29 +81,29 @@ void LCD_SendString(uint8_t lcd_addr, char *str) {
 
 ErrorStatus I2C_Scan(uint8_t address) {
     I2C1->CR1 &= ~I2C_CR1_POS;		/*Этот бит ставится что бы показать,
-									 *что след.бит будет принят в регистр -> DR
-									 *для его дальнейшего смещения*/
+					 *что след.бит будет принят в регистр -> DR
+					 *для его дальнейшего смещения*/
 
-   	I2C1->CR1 |= I2C_CR1_START;		//Генерируем стартовый бит
-   	while(!(I2C1->SR1 & I2C_SR1_SB));	//Ждём пока регситр не сгенерирует бит старта. 0 => ждём... 1 = > готово!
+    I2C1->CR1 |= I2C_CR1_START;		//Генерируем стартовый бит
+    while(!(I2C1->SR1 & I2C_SR1_SB));	//Ждём пока регситр не сгенерирует бит старта. 0 => ждём... 1 = > готово!
 
-	(void)I2C1->SR1;
-   	I2C1->DR = address & (uint8_t)(~I2C_OAR1_ADD0);	//В сдвиговый регистр добавляю адрес устройства
+    (void)I2C1->SR1;
+    I2C1->DR = address & (uint8_t)(~I2C_OAR1_ADD0);	//В сдвиговый регистр добавляю адрес устройства
 //   	do{
 //   	    (void)I2C1->SR2;
 //   	}
-   	while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
+    while(!(I2C1->SR1 & I2C_SR1_ADDR) && !(I2C1->SR1 & I2C_SR1_AF));
 
-   	if(I2C1->SR1 & I2C_SR1_ADDR){
-		I2C1->CR1 |= I2C_CR1_STOP;
-   	    (void)I2C1->SR1;
-   	    (void)I2C1->SR2;
-   	    return SUCCESS;
-   	}else{
-   		I2C1->CR1 |= I2C_CR1_STOP;
-   		I2C1->SR1 &= ~I2C_SR1_AF;
-   		return ERROR;
-   	}
+    if(I2C1->SR1 & I2C_SR1_ADDR){
+	I2C1->CR1 |= I2C_CR1_STOP;
+	(void)I2C1->SR1;
+	(void)I2C1->SR2;
+	return SUCCESS;
+    }else{
+	I2C1->CR1 |= I2C_CR1_STOP;
+	I2C1->SR1 &= ~I2C_SR1_AF;
+	return ERROR;
+    }
 }
 
 void LCD_Init(uint8_t lcd_addr) {

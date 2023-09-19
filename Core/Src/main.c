@@ -8,15 +8,16 @@
 /******************Includes*********************/
 
 #include "stm32f103xb.h"
-#include "RCC.h"
-#include "ILI9341.h"
-#include "IRQ.h"
 #include "LCD_1602.h"
+#include "ILI9341.h"
+#include <stdio.h>
+#include "RCC.h"
+#include "IRQ.h"
 
 #define Enable_RTOS	0
 
 #define DMA_BUFF_SIZE   4
-#define ADDR     	0x38
+#define ADDR     	(0x38 << 1)
 
 #if Enable_RTOS
     #include "FreeRTOS.h"
@@ -28,6 +29,8 @@
 /************Functions declaration**************/
 
 ErrorStatus LCD_1602_init(uint8_t address);
+void LCD_SendCommand();
+void LCD_SendString();
 void Sys_clock(void);
 void GPIO_init(void);
 void TIMx_init(void);
@@ -63,25 +66,17 @@ int main(){
 //    init_dma();
 
 //    SPI_init();
-
+    char strings[64];
     while(1){
-//    	if(ADC1->SR & ADC_SR_EOC){
-//    		ADC1->DR;
-//    	}
+	if(ADC1->SR & ADC_SR_EOC){
+		ADC1->DR;
+	}
+	sprintf(strings, "%u", ADC1->DR);
+	LCD_SendCommand(ADDR, 0b00000001);
+	delay_time(10);
+	LCD_SendString(ADDR, strings);
+	delay_time(10);
 	GPIOC->BSRR |= GPIO_BSRR_BR13;
-//	delay_time(50);
-//	GPIOC->BSRR |= GPIO_BSRR_BS13;
-//	delay_time(250);
-//	for(int i = 0; i < TIM3->ARR; ++i){
-//	    TIM3->CCR4 = i;
-//	    delay_time(1);
-//	}
-//	for(int i = TIM3->ARR; i > 0; --i){
-//	    TIM3->CCR4 = i;
-//	    delay_time(1);
-//	}
-////    	SPI_Transmit(SPI1, vector, 4, 100);
-//        GPIOC->BSRR |= GPIO_BSRR_BS13;
     }
 
 }
