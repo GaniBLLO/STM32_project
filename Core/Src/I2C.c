@@ -9,6 +9,9 @@
 #include "I2C.h"
 #include <IRQ.h>
 
+#define I2C_DMA_BUFF	5
+volatile uint16_t buffer[I2C_DMA_BUFF] = {0};
+
 void I2C_init(){
 /*включение тактирования портов для интерфейса*/
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;		//Включил тактирование на шине с интрейсом
@@ -46,6 +49,29 @@ void I2C_init(){
     I2C1->TRISE = 0x25;				//Время нарастания фронта сигнала
 
     I2C1->CR1 |= I2C_CR1_PE;		//Включение интерфейса
+}
+
+void I2C_DMA_Init(void){
+	//RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+	DMA1_Channel6->CCR &= ~DMA_CCR_EN;
+
+	DMA1_Channel6->CCR |= DMA_CCR_TCIE; 	//Включение прерывания при полной передачи данных
+	DMA1_Channel6->CCR |= DMA_CCR_TEIE;		//Включение прерывание при ошибки передачи
+	DMA1_Channel6->CCR |= DMA_CCR_DIR;		//Чтение данных из памяти
+	DMA1_Channel6->CCR |= DMA_CCR_CIRC;  	//Включение кольцевого буфера
+	DMA1_Channel6->CCR &= ~DMA_CCR_PINC;  	//Адрес переферии неизменный => не инкрементируется
+	DMA1_Channel6->CCR |= DMA_CCR_MINC;  	//Инкрементирование адреса памяти
+	DMA1_Channel6->CCR |= DMA_CCR_PSIZE_0;  	//Задал размерность данных 8бит для переферии
+	DMA1_Channel6->CCR |= DMA_CCR_MSIZE_0;  	//Задал размерность данных 8бит для пкамяти
+    DMA1_Channel6->CCR &= ~DMA_CCR_PL;  	//Задал приоритетность TODO проверить работу приоритетности
+    DMA1_Channel6->CCR &= ~DMA_CCR_MEM2MEM;
+
+    DMA1_Channel6->CNDTR = I2C_DMA_BUFF;			//задал количество данных
+    DMA1_Channel6->CMAR = (uint32_t)&(ADC1->DR);		//Указатель на адрес в ADC_IN0
+    DMA1_Channel6->CMAR = (uint32_t)buffer;		//Буфер для данных
+
+    NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+    DMA1_Channel6->CCR |= DMA_CCR_EN;
 }
 
 
